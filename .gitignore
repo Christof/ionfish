@@ -6,7 +6,9 @@ _ReSharper.*
 obj
 obj/*
 *.resharper
+*.ReSharper
 *.resharper.user
+*.ReSharper.user
 *.sln.cache
 *.csproj.user
 *.Cache
