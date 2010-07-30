@@ -1,3 +1,5 @@
+using System;
+
 namespace Math
 {
     public struct Vector3
@@ -26,6 +28,29 @@ namespace Math
         public float Z
         {
             get { return mZ; }
+        }
+
+        public static Vector3 operator +(Vector3 left, Vector3 right)
+        {
+            return new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+        }
+
+        public static Vector3 operator -(Vector3 left, Vector3 right)
+        {
+            return new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+        }
+
+        public float Dot(Vector3 other)
+        {
+            return mX * other.X + mY * other.Y + mZ * other.Z;
+        }
+
+        public Vector3 Cross(Vector3 other)
+        {
+            return new Vector3(
+                mY * other.Z - mZ * other.mY,
+                mZ * other.X - mX * other.Z,
+                mX * other.Y - mY * other.X);
         }
     }
 }
