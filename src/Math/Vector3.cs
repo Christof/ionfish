@@ -30,6 +30,11 @@ namespace Math
             get { return mZ; }
         }
 
+        public float Length
+        {
+            get { return (float) System.Math.Sqrt(mX * mX + mY * mY + mZ * mZ); }
+        }
+
         public static Vector3 operator +(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
@@ -38,6 +43,16 @@ namespace Math
         public static Vector3 operator -(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+        }
+
+        public static Vector3 operator *(Vector3 vector, float scalar)
+        {
+            return new Vector3(vector.X * scalar, vector.Y * scalar, vector.Z * scalar);
+        }
+
+        public static Vector3 operator *(float scalar, Vector3 vector)
+        {
+            return vector * scalar;
         }
 
         public float Dot(Vector3 other)
@@ -51,6 +66,12 @@ namespace Math
                 mY * other.Z - mZ * other.mY,
                 mZ * other.X - mX * other.Z,
                 mX * other.Y - mY * other.X);
+        }
+
+        public Vector3 Normalized()
+        {
+            float inverseLength = 1 / Length;
+            return this * inverseLength;
         }
     }
 }
