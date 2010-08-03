@@ -1,0 +1,15 @@
+require 'rubygems'
+require 'albacore'
+
+desc "Build the solution"
+msbuild do |msb|
+	msb.solution = "solution.sln"
+end
+
+desc "Runs specs"
+mspec do |mspec|
+	mspec.command = "../machine.specifications/Build/Release/mspec.exe"
+	mspec.assemblies "bin/Math.Tests.dll"
+	mspec.html_output = "./specs.html"
+end
+
