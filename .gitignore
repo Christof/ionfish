@@ -16,3 +16,4 @@ NDependOut
 /build/test-report*
 /Reports
 *.gallio.user
+*.html
