@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spec_MathExtensions.cs" />
     <Compile Include="Spec_Matrix.cs" />
     <Compile Include="Spec_Vector2.cs" />
     <Compile Include="Spec_Vector3.cs" />
