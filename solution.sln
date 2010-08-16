@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "src\Math\Math.csproj", "{364AF331-5C72-4D93-9890-40010A656057}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math.Specs", "src\Math.Tests\Math.Specs.csproj", "{39151B32-B389-45E6-8BEE-936192267A9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math.Specs", "src\Math.Specs\Math.Specs.csproj", "{39151B32-B389-45E6-8BEE-936192267A9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
