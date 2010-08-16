@@ -2,7 +2,7 @@ using System;
 
 namespace Math
 {
-    public struct Vector3
+    public struct Vector3 : IEquatable<Vector3>
     {
         private readonly float mX;
         private readonly float mY;
@@ -72,6 +72,23 @@ namespace Math
         {
             float inverseLength = 1 / Length;
             return this * inverseLength;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector3 && Equals((Vector3) obj);
+        }
+
+        public bool Equals(Vector3 other)
+        {
+            return mX.EqualsWithDelta(other.X) &&
+                   mY.EqualsWithDelta(other.Y) &&
+                   mZ.EqualsWithDelta(other.Z);
+        }
+
+        public override int GetHashCode()
+        {
+            return mX.GetHashCode() ^ mY.GetHashCode() ^ mZ.GetHashCode();
         }
     }
 }

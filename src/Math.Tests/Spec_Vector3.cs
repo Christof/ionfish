@@ -1,3 +1,4 @@
+using System;
 using Machine.Specifications;
 
 namespace Math
@@ -123,10 +124,37 @@ namespace Math
     [Subject(typeof(Vector3))]
     public class normalize : vector_context
     {
-        static Vector3 resultVector;
+        It should_have_length_of_one = () => vector.Normalized().Length.ShouldBeCloseTo(1);
+    }
 
-        Because of = () => resultVector = vector.Normalized();
+    [Subject(typeof(Vector3))]
+    public class equals
+    {
+        static object vector;
 
-        It should_have_length_of_one = () => resultVector.Length.ShouldBeCloseTo(1);
+        Because of = () => vector = new Vector3(1, 2, 3);
+
+        It should_return_true_if_the_components_difference_is_less_than_the_default_delta
+            = () => vector.Equals(new Vector3(1.0001f, 2.0009f, 3f)).ShouldBeTrue();
+
+        It should_return_false_if_the_components_difference_is_greater_than_the_default_delta
+            = () => vector.Equals(new Vector3(1.0001f, 2.0009f, 4f)).ShouldBeFalse();
+
+        It should_return_false_if_the_argument_has_another_type
+            = () => vector.Equals("other type").ShouldBeFalse();
+    }
+
+    [Subject(typeof(Vector3))]
+    public class equals_with_IEquality
+    {
+        static IEquatable<Vector3> vector;
+
+        Because of = () => vector = new Vector3(1, 2, 3);
+
+        It should_return_true_if_the_components_difference_is_less_than_the_default_delta
+            = () => vector.Equals(new Vector3(1.0001f, 2.0009f, 3f)).ShouldBeTrue();
+
+        It should_return_false_if_the_components_difference_is_greater_than_the_default_delta
+            = () => vector.Equals(new Vector3(1.0001f, 2.0009f, 4f)).ShouldBeFalse();
     }
 }
