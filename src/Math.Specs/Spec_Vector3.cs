@@ -79,7 +79,7 @@ namespace Math
         It should_have_the_scaled_the_components = () => resultVector.ShouldEqual(new Vector3(2, 4, 6));
     }
 
-    [Subject(typeof(Vector3))]6
+    [Subject(typeof(Vector3))]
     public class scalar_multiplication_reverse_operand_order : vector_context
     {
         static Vector3 resultVector;

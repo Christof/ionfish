@@ -2,6 +2,12 @@ namespace Math
 {
     public class Matrix
     {
+        private static readonly Matrix IDENTITY = new Matrix(
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f);
+
         // Don't use auto properties because then the 
         // default StructLayout (which is LayoutKind.Sequential for structs) is not guaranteed.
         private readonly float mR1C1;
@@ -212,6 +218,48 @@ namespace Math
         public float R4C4
         {
             get { return mR4C4; }
+        }
+
+        /// <summary>
+        /// Gets the identity matrix.
+        /// </summary>
+        /// <remarks>
+        /// The elements on the main diagonal are 1; all others are 0.
+        /// </remarks>
+        /// <value>The identity matrix.</value>
+        public static Matrix Identity
+        {
+            get { return IDENTITY; }
+        }
+
+        /// <summary>
+        /// Multiplies the two given matrices.
+        /// </summary>
+        /// <param name="left">The left matrix.</param>
+        /// <param name="right">The right matrix.</param>
+        /// <returns>The product of the two given matrices.</returns>
+        public static Matrix operator *(Matrix left, Matrix right)
+        {
+            return new Matrix(
+                left.mR1C1 * right.mR1C1 + left.mR1C2 * right.mR2C1 + left.mR1C3 * right.mR3C1 + left.mR1C4 * right.mR4C1,
+                left.mR1C1 * right.mR1C2 + left.mR1C2 * right.mR2C2 + left.mR1C3 * right.mR3C2 + left.mR1C4 * right.mR4C2,
+                left.mR1C1 * right.mR1C3 + left.mR1C2 * right.mR2C3 + left.mR1C3 * right.mR3C3 + left.mR1C4 * right.mR4C3,
+                left.mR1C1 * right.mR1C4 + left.mR1C2 * right.mR2C4 + left.mR1C3 * right.mR3C4 + left.mR1C4 * right.mR4C4,
+
+                left.mR2C1 * right.mR1C1 + left.mR2C2 * right.mR2C1 + left.mR2C3 * right.mR3C1 + left.mR2C4 * right.mR4C1,
+                left.mR2C1 * right.mR1C2 + left.mR2C2 * right.mR2C2 + left.mR2C3 * right.mR3C2 + left.mR2C4 * right.mR4C2,
+                left.mR2C1 * right.mR1C3 + left.mR2C2 * right.mR2C3 + left.mR2C3 * right.mR3C3 + left.mR2C4 * right.mR4C3,
+                left.mR2C1 * right.mR1C4 + left.mR2C2 * right.mR2C4 + left.mR2C3 * right.mR3C4 + left.mR2C4 * right.mR4C4,
+
+                left.mR3C1 * right.mR1C1 + left.mR3C2 * right.mR2C1 + left.mR3C3 * right.mR3C1 + left.mR3C4 * right.mR4C1,
+                left.mR3C1 * right.mR1C2 + left.mR3C2 * right.mR2C2 + left.mR3C3 * right.mR3C2 + left.mR3C4 * right.mR4C2,
+                left.mR3C1 * right.mR1C3 + left.mR3C2 * right.mR2C3 + left.mR3C3 * right.mR3C3 + left.mR3C4 * right.mR4C3,
+                left.mR3C1 * right.mR1C4 + left.mR3C2 * right.mR2C4 + left.mR3C3 * right.mR3C4 + left.mR3C4 * right.mR4C4,
+
+                left.mR4C1 * right.mR1C1 + left.mR4C2 * right.mR2C1 + left.mR4C3 * right.mR3C1 + left.mR4C4 * right.mR4C1,
+                left.mR4C1 * right.mR1C2 + left.mR4C2 * right.mR2C2 + left.mR4C3 * right.mR3C2 + left.mR4C4 * right.mR4C2,
+                left.mR4C1 * right.mR1C3 + left.mR4C2 * right.mR2C3 + left.mR4C3 * right.mR3C3 + left.mR4C4 * right.mR4C3,
+                left.mR4C1 * right.mR1C4 + left.mR4C2 * right.mR2C4 + left.mR4C3 * right.mR3C4 + left.mR4C4 * right.mR4C4);
         }
     }
 }
