@@ -13,19 +13,15 @@ namespace Sandbox
 {
     public class Program
     {
-        private struct Vertex
-        {
-            public Vector3 Position;
-            public Color4 Color;
-        }
-
         static void Main()
         {
             using(var window = new Window())
             {
-                Vertex[] vertices = CreateVertices();
+                var positions = CreatePositions();
+                var colors = CreateColors();
 
-                Buffer buffer = CreateVertexBuffer(window.Device, vertices);
+                Buffer positionBuffer = CreateVertexBuffer(window.Device, positions);
+                Buffer colorBuffer = CreateVertexBuffer(window.Device, colors);
 
                 string errors;
                 Effect effect = Effect.FromFile(window.Device, "shader.fx", "fx_4_0",
@@ -38,7 +34,7 @@ namespace Sandbox
                 var inputElements = new[]
                 {
                     new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
-                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0)
+                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 0, 1)
                 };
 
                 var inputLayout = new InputLayout(window.Device, pass.Description.Signature, inputElements);
@@ -52,7 +48,9 @@ namespace Sandbox
                         window.Device.InputAssembler.SetInputLayout(inputLayout);
                         window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
                         window.Device.InputAssembler.SetVertexBuffers(0,
-                            new VertexBufferBinding(buffer, Marshal.SizeOf(typeof(Vertex)), 0));
+                            new VertexBufferBinding(positionBuffer, Marshal.SizeOf(typeof(Vector3)), 0));
+                        window.Device.InputAssembler.SetVertexBuffers(1,
+                            new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Color4)), 0));
 
                         Matrix view = Matrix.LookAtRH(new Vector3(0, 0, 3), new Vector3(), new Vector3(0, 1, 0));
                         Matrix projection = Matrix.PerspectiveFovRH((float)(Math.PI / 3), 800f / 600.0f, 0.01f, 100f);
@@ -65,7 +63,7 @@ namespace Sandbox
                         for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
                         {
                             pass.Apply();
-                            window.Device.Draw(vertices.Length, 0);
+                            window.Device.Draw(positions.Length, 0);
                         }
 
                         window.Present();
@@ -77,14 +75,33 @@ namespace Sandbox
             }
         }
 
-        private static Buffer CreateVertexBuffer(Device device, Vertex[] vertices)
+        static Color4[] CreateColors()
         {
-            var stream = new DataStream(vertices.Length * Marshal.SizeOf(typeof(Vertex)), canRead : true, canWrite : true);
+            var top = new Color4(1f, 0f, 0f);
+            var left = new Color4(0f, 1f, 0f);
+            var right = new Color4(0f, 0f, 1f);
 
-            foreach (var vertex in vertices)
+            return new[] {top, right, left};
+        }
+
+        static Vector3[] CreatePositions()
+        {
+            var top = new Vector3(0f, 1f, 0f);
+            var left = new Vector3(-1f, -1f, 0f);
+            var right = new Vector3(1f, -1f, 0f);
+
+            return new[] { top, right, left };
+        }
+
+        private static Buffer CreateVertexBuffer<T>(Device device, T[] data)
+            where T : struct
+        {
+            int sizeInBytes = data.Length * Marshal.SizeOf(typeof(T));
+            var stream = new DataStream(sizeInBytes, canRead: true, canWrite: true);
+
+            foreach (var element in data)
             {
-                stream.Write(vertex.Position);
-                stream.Write(vertex.Color);
+                stream.Write(element);
             }
 
             // Important: when specifying initial buffer data like this, the buffer will
@@ -97,7 +114,7 @@ namespace Sandbox
                 BindFlags = BindFlags.VertexBuffer,
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
-                SizeInBytes = (vertices.Length * Marshal.SizeOf(typeof(Vertex))),
+                SizeInBytes = sizeInBytes,
                 Usage = ResourceUsage.Default
             };
 
@@ -105,15 +122,6 @@ namespace Sandbox
             stream.Dispose();
 
             return buffer;
-        }
-
-        private static Vertex[] CreateVertices()
-        {
-            var top = new Vertex { Position = new Vector3(0f, 1f, 0f), Color = new Color4(01f, 0f, 0f) };
-            var left = new Vertex { Position = new Vector3(-1f, -1f, 0f), Color = new Color4(0f, 1f, 0f) };
-            var right = new Vertex { Position = new Vector3(1f, -1f, 0f), Color = new Color4(0f, 0f, 1f) };
-
-            return new[] { top, right, left };
         }
     }
 }
