@@ -25,7 +25,7 @@ namespace Sandbox
             {
                 Vertex[] vertices = CreateVertices();
 
-                Buffer buffer = CreateBuffer(window.Device, vertices);
+                Buffer buffer = CreateVertexBuffer(window.Device, vertices);
 
                 string errors;
                 Effect effect = Effect.FromFile(window.Device, "shader.fx", "fx_4_0",
@@ -42,7 +42,6 @@ namespace Sandbox
                 };
 
                 var inputLayout = new InputLayout(window.Device, pass.Description.Signature, inputElements);
-
                 //var engine = IronRuby.Ruby.CreateEngine();
 
                 Application.Idle +=
@@ -78,9 +77,9 @@ namespace Sandbox
             }
         }
 
-        private static Buffer CreateBuffer(Device device, Vertex[] vertices)
+        private static Buffer CreateVertexBuffer(Device device, Vertex[] vertices)
         {
-            var stream = new DataStream(vertices.Length * Marshal.SizeOf(typeof(Vertex)), true, true);
+            var stream = new DataStream(vertices.Length * Marshal.SizeOf(typeof(Vertex)), canRead : true, canWrite : true);
 
             foreach (var vertex in vertices)
             {
@@ -103,7 +102,8 @@ namespace Sandbox
             };
 
             var buffer = new Buffer(device, stream, bufferDescription);
-            stream.Close();
+            stream.Dispose();
+
             return buffer;
         }
 
