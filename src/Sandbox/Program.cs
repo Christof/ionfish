@@ -1,13 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Graphics;
 using SlimDX;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D10;
 using SlimDX.DXGI;
 using Buffer = SlimDX.Direct3D10.Buffer;
 using Device = SlimDX.Direct3D10.Device;
-using Resource = SlimDX.Direct3D10.Resource;
 
 namespace Sandbox
 {
@@ -19,40 +19,16 @@ namespace Sandbox
             public Color4 Color;
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
-            using (var form = new Form { Width = 800, Height = 600 })
+            using(var window = new Window())
             {
-                var factory = new Factory();
-                var device = new Device(factory.GetAdapter(0), DriverType.Hardware, DeviceCreationFlags.None);
-
-                SwapChain swapChain = CreateSwapChain(factory, form, device);
-
-                RenderTargetView renderTarget;
-                using (var texture = Resource.FromSwapChain<Texture2D>(swapChain, 0))
-                {
-                    renderTarget = new RenderTargetView(device, texture);
-                }
-
-                var viewport = new Viewport
-                {
-                    X = 0,
-                    Y = 0,
-                    Width = 800,
-                    Height = 600,
-                    MinZ = 0.0f,
-                    MaxZ = 1.0f
-                };
-
-                device.Rasterizer.SetViewports(viewport);
-                device.OutputMerger.SetTargets(renderTarget);
-
                 Vertex[] vertices = CreateVertices();
 
-                Buffer buffer = CreateBuffer(device, vertices);
+                Buffer buffer = CreateBuffer(window.Device, vertices);
 
-                string errors = string.Empty;
-                Effect effect = Effect.FromFile(device, "shader.fx", "fx_4_0",
+                string errors;
+                Effect effect = Effect.FromFile(window.Device, "shader.fx", "fx_4_0",
                     ShaderFlags.Debug, EffectFlags.None, null, null, out errors);
                 Console.WriteLine(errors);
 
@@ -65,18 +41,18 @@ namespace Sandbox
                     new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0)
                 };
 
-                var inputLayout = new InputLayout(device, pass.Description.Signature, inputElements);
+                var inputLayout = new InputLayout(window.Device, pass.Description.Signature, inputElements);
 
                 //var engine = IronRuby.Ruby.CreateEngine();
 
                 Application.Idle +=
                     delegate
                     {
-                        device.ClearRenderTargetView(renderTarget, new Color4(0, 0, 0));
+                        window.ClearRenderTarget();
 
-                        device.InputAssembler.SetInputLayout(inputLayout);
-                        device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-                        device.InputAssembler.SetVertexBuffers(0,
+                        window.Device.InputAssembler.SetInputLayout(inputLayout);
+                        window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+                        window.Device.InputAssembler.SetVertexBuffers(0,
                             new VertexBufferBinding(buffer, Marshal.SizeOf(typeof(Vertex)), 0));
 
                         Matrix view = Matrix.LookAtRH(new Vector3(0, 0, 3), new Vector3(), new Vector3(0, 1, 0));
@@ -90,15 +66,15 @@ namespace Sandbox
                         for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
                         {
                             pass.Apply();
-                            device.Draw(vertices.Length, 0);
+                            window.Device.Draw(vertices.Length, 0);
                         }
 
-                        swapChain.Present(0, PresentFlags.None);
-
+                        window.Present();
+                        
                         Application.DoEvents();
                     };
 
-                Application.Run(form);
+                window.Run();
             }
         }
 
@@ -138,24 +114,6 @@ namespace Sandbox
             var right = new Vertex { Position = new Vector3(1f, -1f, 0f), Color = new Color4(0f, 0f, 1f) };
 
             return new[] { top, right, left };
-        }
-
-        private static SwapChain CreateSwapChain(Factory factory, Form form, Device device)
-        {
-            var modeDescription = new ModeDescription(800, 600, new Rational(60, 1), Format.R8G8B8A8_UNorm);
-            var swapChainDescription = new SwapChainDescription
-            {
-                BufferCount = 2,
-                IsWindowed = true,
-                Flags = SwapChainFlags.None,
-                ModeDescription = modeDescription,
-                OutputHandle = form.Handle,
-                SampleDescription = new SampleDescription(1, 0),
-                SwapEffect = SwapEffect.Discard,
-                Usage = Usage.RenderTargetOutput
-            };
-
-            return new SwapChain(factory, device, swapChainDescription);
         }
     }
 }
