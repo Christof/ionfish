@@ -9,6 +9,7 @@ using SlimDX.DXGI;
 using Buffer = SlimDX.Direct3D10.Buffer;
 using Device = SlimDX.Direct3D10.Device;
 
+
 namespace Sandbox
 {
     public class Program
@@ -53,7 +54,7 @@ namespace Sandbox
                             new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Color4)), 0));
 
                         Matrix view = Matrix.LookAtRH(new Vector3(0, 0, 3), new Vector3(), new Vector3(0, 1, 0));
-                        Matrix projection = Matrix.PerspectiveFovRH((float)(Math.PI / 3), 800f / 600.0f, 0.01f, 100f);
+                        Matrix projection = Matrix.PerspectiveFovRH((float)(System.Math.PI / 3), 800f / 600.0f, 0.01f, 100f);
                         Matrix world = Matrix.Identity;
                         Matrix worldViewProjection = world * view * projection;
 
@@ -75,20 +76,20 @@ namespace Sandbox
             }
         }
 
-        static Color4[] CreateColors()
+        static Math.Vector4[] CreateColors()
         {
-            var top = new Color4(1f, 0f, 0f);
-            var left = new Color4(0f, 1f, 0f);
-            var right = new Color4(0f, 0f, 1f);
+            var top = new Math.Vector4(1f, 0f, 0f, 0f);
+            var left = new Math.Vector4(0f, 1f, 0f, 0f);
+            var right = new Math.Vector4(0f, 0f, 1f, 0f);
 
             return new[] {top, right, left};
         }
 
-        static Vector3[] CreatePositions()
+        static Math.Vector3[] CreatePositions()
         {
-            var top = new Vector3(0f, 1f, 0f);
-            var left = new Vector3(-1f, -1f, 0f);
-            var right = new Vector3(1f, -1f, 0f);
+            var top = new Math.Vector3(0f, 1f, 0f);
+            var left = new Math.Vector3(-1f, -1f, 0f);
+            var right = new Math.Vector3(1f, -1f, 0f);
 
             return new[] { top, right, left };
         }
