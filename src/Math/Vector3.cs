@@ -90,5 +90,15 @@ namespace Math
         {
             return mX.GetHashCode() ^ mY.GetHashCode() ^ mZ.GetHashCode();
         }
+
+        public static bool operator ==(Vector3 left, Vector3 right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Vector3 left, Vector3 right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

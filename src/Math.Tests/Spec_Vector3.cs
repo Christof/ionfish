@@ -145,7 +145,7 @@ namespace Math
     }
 
     [Subject(typeof(Vector3))]
-    public class equals_with_IEquality
+    public class equals_with_IEquatable
     {
         static IEquatable<Vector3> vector;
 
@@ -156,5 +156,33 @@ namespace Math
 
         It should_return_false_if_the_components_difference_is_greater_than_the_default_delta
             = () => vector.Equals(new Vector3(1.0001f, 2.0009f, 4f)).ShouldBeFalse();
+    }
+
+    [Subject(typeof(Vector3))]
+    public class equals_with_operator
+    {
+        static Vector3 vector;
+
+        Because of = () => vector = new Vector3(1, 2, 3);
+
+        It should_return_true_if_the_components_difference_is_less_than_the_default_delta
+            = () => (vector == new Vector3(1.0001f, 2.0009f, 3f)).ShouldBeTrue();
+
+        It should_return_false_if_the_components_difference_is_greater_than_the_default_delta
+            = () => (vector == new Vector3(1.0001f, 2.0009f, 4f)).ShouldBeFalse();
+    }
+
+    [Subject(typeof(Vector3))]
+    public class not_equals_with_operator
+    {
+        static Vector3 vector;
+
+        Because of = () => vector = new Vector3(1, 2, 3);
+
+        It should_return_false_if_the_components_difference_is_less_than_the_default_delta
+            = () => (vector != new Vector3(1.0001f, 2.0009f, 3f)).ShouldBeFalse();
+
+        It should_return_true_if_the_components_difference_is_greater_than_the_default_delta
+            = () => (vector != new Vector3(1.0001f, 2.0009f, 4f)).ShouldBeTrue();
     }
 }
