@@ -44,8 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\ICamera.cs" />
+    <Compile Include="Cameras\ILens.cs" />
+    <Compile Include="Cameras\IStand.cs" />
+    <Compile Include="Cameras\Stand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Window.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Math\Math.csproj">
+      <Project>{364AF331-5C72-4D93-9890-40010A656057}</Project>
+      <Name>Math</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
