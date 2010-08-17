@@ -2,12 +2,15 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Graphics;
+using Graphics.Cameras;
 using SlimDX;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D10;
 using SlimDX.DXGI;
 using Buffer = SlimDX.Direct3D10.Buffer;
 using Device = SlimDX.Direct3D10.Device;
+using Vector3 = Math.Vector3;
+using Vector4 = Math.Vector4;
 
 
 namespace Sandbox
@@ -41,6 +44,10 @@ namespace Sandbox
                 var inputLayout = new InputLayout(window.Device, pass.Description.Signature, inputElements);
                 //var engine = IronRuby.Ruby.CreateEngine();
 
+                var stand = new Stand { Position = new Vector3(0, 0, 3), Direction = -Vector3.ZAxis };
+                var lens = new PerspectiveProjectionLens();
+                var camera = new Camera(stand, lens);
+
                 Application.Idle +=
                     delegate
                     {
@@ -49,17 +56,14 @@ namespace Sandbox
                         window.Device.InputAssembler.SetInputLayout(inputLayout);
                         window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
                         window.Device.InputAssembler.SetVertexBuffers(0,
-                            new VertexBufferBinding(positionBuffer, Marshal.SizeOf(typeof(Math.Vector3)), 0));
+                            new VertexBufferBinding(positionBuffer, Marshal.SizeOf(typeof(Vector3)), 0));
                         window.Device.InputAssembler.SetVertexBuffers(1,
-                            new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Math.Vector4)), 0));
+                            new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
 
-                        Matrix view = Matrix.LookAtRH(new Vector3(0, 0, 3), new Vector3(), new Vector3(0, 1, 0));
-                        Matrix projection = Matrix.PerspectiveFovRH((float)(System.Math.PI / 3), 800f / 600.0f, 0.01f, 100f);
-                        Matrix world = Matrix.Identity;
-                        Matrix worldViewProjection = world * view * projection;
+                        stand.Position += Vector3.ZAxis;
 
                         effect.GetVariableBySemantic("WorldViewProjection")
-                            .AsMatrix().SetMatrix(worldViewProjection);
+                            .AsMatrix().SetMatrix(camera.ViewProjectionMatrix.ToSlimDX());
 
                         for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
                         {
@@ -76,20 +80,20 @@ namespace Sandbox
             }
         }
 
-        static Math.Vector4[] CreateColors()
+        static Vector4[] CreateColors()
         {
-            var top = new Math.Vector4(1f, 0f, 0f, 0f);
-            var left = new Math.Vector4(0f, 1f, 0f, 0f);
-            var right = new Math.Vector4(0f, 0f, 1f, 0f);
+            var top = new Vector4(1f, 0f, 0f, 0f);
+            var left = new Vector4(0f, 1f, 0f, 0f);
+            var right = new Vector4(0f, 0f, 1f, 0f);
 
             return new[] {top, right, left};
         }
 
-        static Math.Vector3[] CreatePositions()
+        static Vector3[] CreatePositions()
         {
-            var top = new Math.Vector3(0f, 1f, 0f);
-            var left = new Math.Vector3(-1f, -1f, 0f);
-            var right = new Math.Vector3(1f, -1f, 0f);
+            var top = new Vector3(0f, 1f, 0f);
+            var left = new Vector3(-1f, -1f, 0f);
+            var right = new Vector3(1f, -1f, 0f);
 
             return new[] { top, right, left };
         }

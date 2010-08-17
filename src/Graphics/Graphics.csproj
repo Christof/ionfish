@@ -51,6 +51,7 @@
     <Compile Include="Cameras\PerspectiveProjectionLens.cs" />
     <Compile Include="Cameras\Stand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlimDXExtensions.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
