@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace Math
 {
@@ -35,6 +36,26 @@ namespace Math
             get { return (float) System.Math.Sqrt(mX * mX + mY * mY + mZ * mZ); }
         }
 
+        public static Vector3 XAxis
+        {
+            get { return new Vector3(1, 0, 0); }
+        }
+
+        public static Vector3 YAxis
+        {
+            get { return new Vector3(0, 1, 0); }
+        }
+
+        public static Vector3 ZAxis
+        {
+            get { return new Vector3(0, 0, 1); }
+        }
+
+        public static Vector3 Zero
+        {
+            get { return new Vector3(0, 0, 0); }
+        }
+
         public static Vector3 operator +(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
@@ -53,6 +74,11 @@ namespace Math
         public static Vector3 operator *(float scalar, Vector3 vector)
         {
             return vector * scalar;
+        }
+
+        public static Vector3 operator -(Vector3 vector)
+        {
+            return new Vector3(-vector.X, -vector.Y, -vector.Z);
         }
 
         public float Dot(Vector3 other)
@@ -99,6 +125,11 @@ namespace Math
         public static bool operator !=(Vector3 left, Vector3 right)
         {
             return !left.Equals(right);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X: {0} Y: {1} Z: {2}", mX, mY, mZ);
         }
     }
 }
