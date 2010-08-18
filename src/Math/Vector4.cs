@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace Math
 {
@@ -43,6 +44,31 @@ namespace Math
             get { return (float)System.Math.Sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW); }
         }
 
+        public static Vector4 XAxis
+        {
+            get { return new Vector4(1, 0, 0, 0); }
+        }
+
+        public static Vector4 YAxis
+        {
+            get { return new Vector4(0, 1, 0, 0); }
+        }
+
+        public static Vector4 ZAxis
+        {
+            get { return new Vector4(0, 0, 1, 0); }
+        }
+
+        public static Vector4 WAxis
+        {
+            get { return new Vector4(0, 0, 0, 1); }
+        }
+
+        public static Vector4 Zero
+        {
+            get { return new Vector4(0, 0, 0, 0); }
+        }
+
         public static Vector4 operator +(Vector4 left, Vector4 right)
         {
             return new Vector4(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
@@ -61,6 +87,11 @@ namespace Math
         public static Vector4 operator *(float scalar, Vector4 vector)
         {
             return vector * scalar;
+        }
+
+        public static Vector4 operator  -(Vector4 vector)
+        {
+            return new Vector4(-vector.X, -vector.Y, -vector.Z, -vector.W);
         }
 
         public float Dot(Vector4 other)
@@ -100,6 +131,11 @@ namespace Math
         public static bool operator !=(Vector4 left, Vector4 right)
         {
             return !left.Equals(right);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X: {0} Y: {1} Z: {2} W: {3}", mX, mY, mZ, mW);
         }
     }
 }

@@ -59,6 +59,17 @@ namespace Math
         }
 
         [Subject(typeof(Vector2))]
+        public class unary_minus_operator : vector_context
+        {
+            static Vector2 resultVector;
+            static Vector2 negatedVector = new Vector2(-1, -2);
+
+            Because of = () => resultVector = -vector;
+
+            It should_be_negated = () => resultVector.ShouldEqual(negatedVector);
+        }
+
+        [Subject(typeof(Vector2))]
         public class scalar_multiplication : vector_context
         {
             static Vector2 resultVector;
@@ -161,6 +172,14 @@ namespace Math
 
             It should_return_true_if_the_components_difference_is_greater_than_the_default_delta
                 = () => (vector != new Vector2(1.0001f, 3f)).ShouldBeTrue();
+        }
+
+        [Subject(typeof(Vector2))]
+        public class to_string
+        {
+            static Vector2 vector = new Vector2(1.1f, 2.2f);
+
+            It should_be_formatted_correctly = () => vector.ToString().ShouldEqual("X: 1.1 Y: 2.2");
         }
     }
 }
