@@ -6,9 +6,12 @@ using Graphics.Cameras;
 using SlimDX;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D10;
+using SlimDX.DirectInput;
 using SlimDX.DXGI;
 using Buffer = SlimDX.Direct3D10.Buffer;
 using Device = SlimDX.Direct3D10.Device;
+using Effect = SlimDX.Direct3D10.Effect;
+using EffectFlags = SlimDX.D3DCompiler.EffectFlags;
 using Vector3 = Math.Vector3;
 using Vector4 = Math.Vector4;
 
@@ -42,7 +45,10 @@ namespace Sandbox
                 };
 
                 var inputLayout = new InputLayout(window.Device, pass.Description.Signature, inputElements);
-                //var engine = IronRuby.Ruby.CreateEngine();
+
+                var directInput = new DirectInput();
+                var keyboard = new Keyboard(directInput);
+                keyboard.Acquire();
 
                 var stand = new Stand { Position = new Vector3(0, 0, 3), Direction = -Vector3.ZAxis };
                 var lens = new PerspectiveProjectionLens();
@@ -60,7 +66,19 @@ namespace Sandbox
                         window.Device.InputAssembler.SetVertexBuffers(1,
                             new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
 
-                        stand.Position += Vector3.ZAxis;
+                        var state = keyboard.GetCurrentState();
+                        if (state.IsPressed(Key.W))
+                        {
+                            stand.Position += Vector3.ZAxis;
+                        }
+                        if (state.IsPressed(Key.S))
+                        {
+                            stand.Position -= Vector3.ZAxis;
+                        }
+                        if (state.IsPressed(Key.Escape))
+                        {
+                            Application.Exit();
+                        }
 
                         effect.GetVariableBySemantic("WorldViewProjection")
                             .AsMatrix().SetMatrix(camera.ViewProjectionMatrix.ToSlimDX());
