@@ -28,6 +28,11 @@ namespace Math
             get { return (float)System.Math.Sqrt(mX * mX + mY * mY); }
         }
 
+        public static Vector2 XAxis
+        {
+            get { return new Vector2(0, 0); }
+        }
+
         public static Vector2 operator +(Vector2 left, Vector2 right)
         {
             return new Vector2(left.X + right.X, left.Y + right.Y);
