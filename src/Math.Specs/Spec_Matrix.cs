@@ -103,25 +103,5 @@ namespace Math
             It should_have_assigned_value_to_Row_4_Colum_3 = () => resultMatrix.R4C3.ShouldEqual(12290);
             It should_have_assigned_value_to_Row_4_Colum_4 = () => resultMatrix.R4C4.ShouldEqual(12460);
         }
-
-        //[Subject(typeof(Matrix))]
-        //public class equals
-        //{
-        //    static Matrix matrix1 = new Matrix(
-        //        11, 12, 13, 14,
-        //        21, 22, 23, 24,
-        //        31, 32, 33, 34,
-        //        41, 42, 43, 44);
-
-        //    static Matrix matrix2 = new Matrix(
-        //        11, 12, 13, 14,
-        //        21, 22, 23, 24,
-        //        31, 32, 33, 34,
-        //        41, 42, 43, 44);
-
-        //    It should_be_true_if_the_matrices_equal = () => matrix1.Equals(matrix2).ShouldBeTrue();
-        //    It should_be_false_if_other_type = () => matrix1.Equals("other type").ShouldBeFalse();
-        //    It should_be_false_if_compared_with_null = () => matrix1.Equals(null).ShouldBeFalse();
-        //}
     }
 }
