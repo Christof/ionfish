@@ -9,7 +9,9 @@ end
 desc "Runs specs"
 mspec do |mspec|
 	mspec.command = "../machine.specifications/Build/Release/mspec.exe"
-	mspec.assemblies "bin/Math.Tests.dll"
+	mspec.assemblies Dir["bin/*.Specs.dll"]
 	mspec.html_output = "./specs.html"
 end
 
+desc "Build the solution and run the specs"
+task :default => [:msbuild, :mspec]
