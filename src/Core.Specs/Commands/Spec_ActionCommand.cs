@@ -1,7 +1,6 @@
-using Core.Commands;
 using Machine.Specifications;
 
-namespace Core.Specs
+namespace Core.Commands
 {
     public class Spec_ActionCommand
     {

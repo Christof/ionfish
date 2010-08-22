@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
 using Input;
@@ -21,6 +22,8 @@ namespace Sandbox
 {
     public class Program
     {
+        private const string MOVE_FORWARD = "move forward";
+
         static void Main()
         {
             using(var window = new Window())
@@ -64,6 +67,14 @@ namespace Sandbox
                             new VertexBufferBinding(positionBuffer, Marshal.SizeOf(typeof(Vector3)), 0));
                         window.Device.InputAssembler.SetVertexBuffers(1,
                             new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
+
+                        var commands = new CommandManager();
+                        commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis);
+
+                        var inputCommandBinder = new InputCommandBinder(commands, keyboard);
+                        //inputCommandBinder.Bind(MOVE_FORWARD, Button.W);
+
+                        var moveForwardCommand = new ActionCommand("move forward", () => stand.Position += Vector3.ZAxis);
 
                         keyboard.Update();
                         if (keyboard.IsPressed(Button.W))
