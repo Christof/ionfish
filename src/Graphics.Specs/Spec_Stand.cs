@@ -40,7 +40,7 @@ namespace Graphics
             Because of = () => viewMatrix = stand.ViewMatrix;
 
             It should_have_calculated_the_view_matrix = () =>
-                viewMatrix.ShouldEqual(new Matrix(
+                viewMatrix.ShouldEqualWithDelta(new Matrix(
                  0.4082483f,  -0.7909116f, -0.4558423f, 0,
                 -0.8164966f, -0.09304842f, -0.5698029f, 0,
                  0.4082483f,   0.6048148f, -0.6837634f, 0,

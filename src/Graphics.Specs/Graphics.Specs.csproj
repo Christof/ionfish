@@ -56,6 +56,10 @@
       <Project>{29B1F31F-15EE-4C52-9578-19FA9E195B56}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Math.Specs\Math.Specs.csproj">
+      <Project>{39151B32-B389-45E6-8BEE-936192267A9B}</Project>
+      <Name>Math.Specs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{364AF331-5C72-4D93-9890-40010A656057}</Project>
       <Name>Math</Name>
