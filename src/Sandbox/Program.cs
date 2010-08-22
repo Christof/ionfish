@@ -23,6 +23,8 @@ namespace Sandbox
     public class Program
     {
         private const string MOVE_FORWARD = "move forward";
+        private const string MOVE_BACKWARD = "move backward";
+        private const string ESCAPE = "escape";
 
         static void Main()
         {
@@ -56,6 +58,16 @@ namespace Sandbox
                 var lens = new PerspectiveProjectionLens();
                 var camera = new Camera(stand, lens);
 
+                var commands = new CommandManager();
+                commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis);
+                commands.Add(MOVE_BACKWARD, () => stand.Position -= Vector3.ZAxis);
+                commands.Add(ESCAPE, Application.Exit);
+
+                var inputCommandBinder = new InputCommandBinder(commands, keyboard);
+                inputCommandBinder.Bind(Button.W, MOVE_FORWARD);
+                inputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
+                inputCommandBinder.Bind(Button.Escape, ESCAPE);
+
                 Application.Idle +=
                     delegate
                     {
@@ -68,28 +80,9 @@ namespace Sandbox
                         window.Device.InputAssembler.SetVertexBuffers(1,
                             new VertexBufferBinding(colorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
 
-                        var commands = new CommandManager();
-                        commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis);
-
-                        var inputCommandBinder = new InputCommandBinder(commands, keyboard);
-                        //inputCommandBinder.Bind(MOVE_FORWARD, Button.W);
-
-                        var moveForwardCommand = new ActionCommand("move forward", () => stand.Position += Vector3.ZAxis);
-
                         keyboard.Update();
-                        if (keyboard.IsPressed(Button.W))
-                        {
-                            stand.Position += Vector3.ZAxis;
-                        }
-                        if (keyboard.IsPressed(Button.S))
-                        {
-                            stand.Position -= Vector3.ZAxis;
-                        }
-                        if (keyboard.IsPressed(Button.Escape))
-                        {
-                            Application.Exit();
-                        }
-
+                        inputCommandBinder.Update();
+                        
                         effect.GetVariableBySemantic("WorldViewProjection")
                             .AsMatrix().SetMatrix(camera.ViewProjectionMatrix.ToSlimDX());
 

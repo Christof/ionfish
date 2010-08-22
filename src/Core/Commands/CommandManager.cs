@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Commands
 {
-    public class CommandManager
+    public class CommandManager : ICommandManager
     {
         private readonly Dictionary<string, ActionCommand> mActionList = new Dictionary<string, ActionCommand>();
 

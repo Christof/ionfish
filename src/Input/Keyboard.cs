@@ -2,7 +2,7 @@ using SlimDX.DirectInput;
 
 namespace Input
 {
-    public class Keyboard
+    public class Keyboard : IKeyboard
     {
         private readonly SlimDX.DirectInput.Keyboard mKeyboard;
         private KeyboardState mState;
