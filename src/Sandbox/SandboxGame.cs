@@ -50,8 +50,8 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis);
-            commands.Add(MOVE_BACKWARD, () => stand.Position -= Vector3.ZAxis);
+            commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis * Frametime);
+            commands.Add(MOVE_BACKWARD, () => stand.Position -= Vector3.ZAxis * Frametime);
             commands.Add(ESCAPE, Exit);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);

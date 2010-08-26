@@ -90,6 +90,11 @@ namespace Graphics
             mSwapChain.Present(0, PresentFlags.None);
         }
 
+        public void SetCaption(string text)
+        {
+            mForm.Text = text;
+        }
+
         public void Run()
         {
             Application.Run(mForm);
