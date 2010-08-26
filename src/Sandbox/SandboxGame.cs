@@ -22,9 +22,10 @@ namespace Sandbox
         private InputLayout mInputLayout;
         private Buffer mPositionBuffer;
         private Buffer mColorBuffer;
+        private Buffer mIndexBuffer;
         private Camera mCamera;
         private Effect mEffect;
-        private Vector3[] mPositions;
+        private uint[] mIndices;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -32,11 +33,13 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            mPositions = CreatePositions();
+            var positions = CreatePositions();
             var colors = CreateColors();
+            mIndices = CreateIndices();
 
-            mPositionBuffer = CreateVertexBuffer(Window.Device, mPositions);
+            mPositionBuffer = CreateVertexBuffer(Window.Device, positions);
             mColorBuffer = CreateVertexBuffer(Window.Device, colors);
+            mIndexBuffer = CreateIndexBuffer(Window.Device, mIndices);
 
             string errors;
             mEffect = Effect.FromFile(Window.Device, "shader.fx", "fx_4_0",
@@ -68,6 +71,7 @@ namespace Sandbox
                 new VertexBufferBinding(mPositionBuffer, Marshal.SizeOf(typeof(Vector3)), 0));
             Window.Device.InputAssembler.SetVertexBuffers(1,
                 new VertexBufferBinding(mColorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
+            Window.Device.InputAssembler.SetIndexBuffer(mIndexBuffer, Format.R32_UInt, 0);
 
             mKeyboard.Update();
             mInputCommandBinder.Update();
@@ -89,29 +93,48 @@ namespace Sandbox
             for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
             {
                 pass.Apply();
-                Window.Device.Draw(mPositions.Length, 0);
+                Window.Device.DrawIndexed(mIndices.Length, 0, 0);
             }
         }
 
         static Vector4[] CreateColors()
         {
-            var top = new Vector4(1f, 0f, 0f, 0f);
-            var left = new Vector4(0f, 1f, 0f, 0f);
-            var right = new Vector4(0f, 0f, 1f, 0f);
+            var topLeft = new Vector4(1f, 0f, 0f, 0f);
+            var topRight = new Vector4(0f, 1f, 0f, 0f);
+            var bottomLeft = new Vector4(0f, 0f, 1f, 0f);
+            var bottomRight = new Vector4(0.5f, 0.5f, 0.5f, 0f);
 
-            return new[] { top, right, left };
+            return new[] { topLeft, topRight, bottomLeft, bottomRight };
         }
 
         static Vector3[] CreatePositions()
         {
-            var top = new Vector3(0f, 1f, 0f);
-            var left = new Vector3(-1f, -1f, 0f);
-            var right = new Vector3(1f, -1f, 0f);
+            var topLeft = new Vector3(-0.5f, 0.5f, 0f);
+            var topRight = new Vector3(0.5f, 0.5f, 0f);
+            var bottomLeft = new Vector3(-0.5f, -0.5f, 0f);
+            var bottomRight = new Vector3(0.5f, -0.5f, 0f);
 
-            return new[] { top, right, left };
+            return new[] { topLeft, topRight, bottomLeft, bottomRight };
+        }
+
+        private static uint[] CreateIndices()
+        {
+            return new uint[] { 0, 1, 3, 0, 3, 2 };
         }
 
         private static Buffer CreateVertexBuffer<T>(Device device, T[] data)
+            where T : struct
+        {
+            return CreateBuffer(device, data, BindFlags.VertexBuffer);
+        }
+
+        private static Buffer CreateIndexBuffer<T>(Device device, T[] data)
+            where T : struct
+        {
+            return CreateBuffer(device, data, BindFlags.IndexBuffer);
+        }
+
+        private static Buffer CreateBuffer<T>(Device device, T[] data, BindFlags bindFlags)
             where T : struct
         {
             int sizeInBytes = data.Length * Marshal.SizeOf(typeof(T));
@@ -129,7 +152,7 @@ namespace Sandbox
 
             var bufferDescription = new BufferDescription
             {
-                BindFlags = BindFlags.VertexBuffer,
+                BindFlags = bindFlags,
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
                 SizeInBytes = sizeInBytes,
