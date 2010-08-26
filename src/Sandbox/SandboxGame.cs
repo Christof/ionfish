@@ -15,12 +15,71 @@ using Vector4 = Math.Vector4;
 
 namespace Sandbox
 {
+    public class Stream<T> : IDisposable
+        where T : struct 
+    {
+        private readonly Device mDevice;
+        private readonly T[] mData;
+        private readonly int mElementSize;
+        private Buffer mBuffer;
+        private VertexBufferBinding mVertexBufferBinding;
+
+        public Stream(Device device, T[] data)
+        {
+            mDevice = device;
+            mData = data;
+            mElementSize = Marshal.SizeOf(typeof (T));
+
+            CreateBuffer();
+        }
+
+        private void CreateBuffer()
+        {
+            int sizeInBytes = mData.Length * mElementSize;
+            var stream = new DataStream(sizeInBytes, canRead: true, canWrite: true);
+
+            foreach (var element in mData)
+            {
+                stream.Write(element);
+            }
+
+            // Important: when specifying initial buffer data like this, the buffer will
+            // read from the current DataStream position; we must rewind the stream to 
+            // the start of the data we just wrote.
+            stream.Position = 0;
+
+            var bufferDescription = new BufferDescription
+            {
+                BindFlags = BindFlags.VertexBuffer,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.None,
+                SizeInBytes = sizeInBytes,
+                Usage = ResourceUsage.Default
+            };
+
+            mBuffer = new Buffer(mDevice, stream, bufferDescription);
+            stream.Dispose();
+
+            mVertexBufferBinding = new VertexBufferBinding(mBuffer, mElementSize, 0);
+        }
+
+        public void OnFrame()
+        {
+            mDevice.InputAssembler.SetVertexBuffers(0, mVertexBufferBinding);
+        }
+
+        public void Dispose()
+        {
+            mBuffer.Dispose();
+        }
+    }
+
     public class SandboxGame : Game
     {
         private Keyboard mKeyboard;
         private InputCommandBinder mInputCommandBinder;
         private InputLayout mInputLayout;
-        private Buffer mPositionBuffer;
+        private Stream<Vector3> mPositionStream;
         private Buffer mColorBuffer;
         private Buffer mIndexBuffer;
         private Camera mCamera;
@@ -33,11 +92,10 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            var positions = CreatePositions();
+            mPositionStream = new Stream<Vector3>(Window.Device, CreatePositions());
             var colors = CreateColors();
             mIndices = CreateIndices();
 
-            mPositionBuffer = CreateVertexBuffer(Window.Device, positions);
             mColorBuffer = CreateVertexBuffer(Window.Device, colors);
             mIndexBuffer = CreateIndexBuffer(Window.Device, mIndices);
 
@@ -67,8 +125,7 @@ namespace Sandbox
         {
             Window.Device.InputAssembler.SetInputLayout(mInputLayout);
             Window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-            Window.Device.InputAssembler.SetVertexBuffers(0,
-                new VertexBufferBinding(mPositionBuffer, Marshal.SizeOf(typeof(Vector3)), 0));
+            mPositionStream.OnFrame();
             Window.Device.InputAssembler.SetVertexBuffers(1,
                 new VertexBufferBinding(mColorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
             Window.Device.InputAssembler.SetIndexBuffer(mIndexBuffer, Format.R32_UInt, 0);
