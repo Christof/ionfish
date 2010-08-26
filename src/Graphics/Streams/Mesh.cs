@@ -43,6 +43,7 @@ namespace Graphics.Streams
 
         public void OnFrame()
         {
+            mDevice.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
             foreach (var stream in mStreams)
             {
                 stream.OnFrame();

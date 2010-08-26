@@ -1,14 +1,10 @@
-﻿using System;
-using Core.Commands;
+﻿using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
+using Graphics.Materials;
 using Graphics.Streams;
 using Input;
-using SlimDX.D3DCompiler;
-using SlimDX.Direct3D10;
-using Mesh = Graphics.Streams.Mesh;
-using Vector3 = Math.Vector3;
-using Vector4 = Math.Vector4;
+using Math;
 
 namespace Sandbox
 {
@@ -16,10 +12,10 @@ namespace Sandbox
     {
         private Keyboard mKeyboard;
         private InputCommandBinder mInputCommandBinder;
-        private InputLayout mInputLayout;
         private Mesh mMesh;
         private Camera mCamera;
-        private Effect mEffect;
+        private Material mMaterial;
+        private MeshMaterialBinding mBinding;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -32,10 +28,8 @@ namespace Sandbox
                 .CreateVertexStream(StreamUsage.Color, CreateColors())
                 .CreateIndexStream(CreateIndices());
             
-            string errors;
-            mEffect = Effect.FromFile(Window.Device, "shader.fx", "fx_4_0",
-                ShaderFlags.Debug, EffectFlags.None, null, null, out errors);
-            Console.WriteLine(errors);
+            mMaterial = new Material("shader.fx", Window.Device);
+            mBinding = new MeshMaterialBinding(Window.Device, mMaterial, mMesh);
 
             mKeyboard = new Keyboard();
 
@@ -56,26 +50,11 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
-            Window.Device.InputAssembler.SetInputLayout(mInputLayout);
-            Window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-            mMesh.OnFrame();
-
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            mEffect.GetVariableBySemantic("WorldViewProjection")
-                .AsMatrix().SetMatrix(mCamera.ViewProjectionMatrix.ToSlimDX());
-
-            var technique = mEffect.GetTechniqueByIndex(0);
-            var pass = technique.GetPassByIndex(0);
-
-            mInputLayout = new InputLayout(Window.Device, pass.Description.Signature, mMesh.GetInputElements());
-
-            for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
-            {
-                pass.Apply();
-                mMesh.Draw();
-            }
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix);
+            mBinding.Draw();
         }
 
         static Vector4[] CreateColors()
