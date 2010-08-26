@@ -1,87 +1,25 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
+using Graphics.Streams;
 using Input;
-using SlimDX;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D10;
 using SlimDX.DXGI;
-using Buffer = SlimDX.Direct3D10.Buffer;
-using Device = SlimDX.Direct3D10.Device;
 using Vector3 = Math.Vector3;
 using Vector4 = Math.Vector4;
 
 namespace Sandbox
 {
-    public class Stream<T> : IDisposable
-        where T : struct 
-    {
-        private readonly Device mDevice;
-        private readonly T[] mData;
-        private readonly int mElementSize;
-        private Buffer mBuffer;
-        private VertexBufferBinding mVertexBufferBinding;
-
-        public Stream(Device device, T[] data)
-        {
-            mDevice = device;
-            mData = data;
-            mElementSize = Marshal.SizeOf(typeof (T));
-
-            CreateBuffer();
-        }
-
-        private void CreateBuffer()
-        {
-            int sizeInBytes = mData.Length * mElementSize;
-            var stream = new DataStream(sizeInBytes, canRead: true, canWrite: true);
-
-            foreach (var element in mData)
-            {
-                stream.Write(element);
-            }
-
-            // Important: when specifying initial buffer data like this, the buffer will
-            // read from the current DataStream position; we must rewind the stream to 
-            // the start of the data we just wrote.
-            stream.Position = 0;
-
-            var bufferDescription = new BufferDescription
-            {
-                BindFlags = BindFlags.VertexBuffer,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None,
-                SizeInBytes = sizeInBytes,
-                Usage = ResourceUsage.Default
-            };
-
-            mBuffer = new Buffer(mDevice, stream, bufferDescription);
-            stream.Dispose();
-
-            mVertexBufferBinding = new VertexBufferBinding(mBuffer, mElementSize, 0);
-        }
-
-        public void OnFrame()
-        {
-            mDevice.InputAssembler.SetVertexBuffers(0, mVertexBufferBinding);
-        }
-
-        public void Dispose()
-        {
-            mBuffer.Dispose();
-        }
-    }
-
     public class SandboxGame : Game
     {
         private Keyboard mKeyboard;
         private InputCommandBinder mInputCommandBinder;
         private InputLayout mInputLayout;
         private Stream<Vector3> mPositionStream;
-        private Buffer mColorBuffer;
-        private Buffer mIndexBuffer;
+        private Stream<Vector4> mColorStream;
+        private IndexStream mIndexStream;
         private Camera mCamera;
         private Effect mEffect;
         private uint[] mIndices;
@@ -92,13 +30,11 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            mPositionStream = new Stream<Vector3>(Window.Device, CreatePositions());
-            var colors = CreateColors();
+            mPositionStream = new VertexStream<Vector3>(Window.Device, CreatePositions(), 0);
+            mColorStream = new VertexStream<Vector4>(Window.Device, CreateColors(), 1);
             mIndices = CreateIndices();
-
-            mColorBuffer = CreateVertexBuffer(Window.Device, colors);
-            mIndexBuffer = CreateIndexBuffer(Window.Device, mIndices);
-
+            mIndexStream = new IndexStream(Window.Device, mIndices);
+            
             string errors;
             mEffect = Effect.FromFile(Window.Device, "shader.fx", "fx_4_0",
                 ShaderFlags.Debug, EffectFlags.None, null, null, out errors);
@@ -126,9 +62,8 @@ namespace Sandbox
             Window.Device.InputAssembler.SetInputLayout(mInputLayout);
             Window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
             mPositionStream.OnFrame();
-            Window.Device.InputAssembler.SetVertexBuffers(1,
-                new VertexBufferBinding(mColorBuffer, Marshal.SizeOf(typeof(Vector4)), 0));
-            Window.Device.InputAssembler.SetIndexBuffer(mIndexBuffer, Format.R32_UInt, 0);
+            mColorStream.OnFrame();
+            mIndexStream.OnFrame();
 
             mKeyboard.Update();
             mInputCommandBinder.Update();
@@ -177,49 +112,6 @@ namespace Sandbox
         private static uint[] CreateIndices()
         {
             return new uint[] { 0, 1, 3, 0, 3, 2 };
-        }
-
-        private static Buffer CreateVertexBuffer<T>(Device device, T[] data)
-            where T : struct
-        {
-            return CreateBuffer(device, data, BindFlags.VertexBuffer);
-        }
-
-        private static Buffer CreateIndexBuffer<T>(Device device, T[] data)
-            where T : struct
-        {
-            return CreateBuffer(device, data, BindFlags.IndexBuffer);
-        }
-
-        private static Buffer CreateBuffer<T>(Device device, T[] data, BindFlags bindFlags)
-            where T : struct
-        {
-            int sizeInBytes = data.Length * Marshal.SizeOf(typeof(T));
-            var stream = new DataStream(sizeInBytes, canRead: true, canWrite: true);
-
-            foreach (var element in data)
-            {
-                stream.Write(element);
-            }
-
-            // Important: when specifying initial buffer data like this, the buffer will
-            // read from the current DataStream position; we must rewind the stream to 
-            // the start of the data we just wrote.
-            stream.Position = 0;
-
-            var bufferDescription = new BufferDescription
-            {
-                BindFlags = bindFlags,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None,
-                SizeInBytes = sizeInBytes,
-                Usage = ResourceUsage.Default
-            };
-
-            var buffer = new Buffer(device, stream, bufferDescription);
-            stream.Dispose();
-
-            return buffer;
         }
     }
 }
