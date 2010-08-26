@@ -27,6 +27,7 @@ namespace Graphics
         public void InitializeDevice()
         {
             mForm = new Form { Width = mWidth, Height = mHeight };
+            mForm.Closing += (sender, args) => IsClosing = true;
 
             using (var factory = new Factory())
             {
@@ -99,5 +100,7 @@ namespace Graphics
         {
             Application.Run(mForm);
         }
+
+        public bool IsClosing { get; private set; }
     }
 }

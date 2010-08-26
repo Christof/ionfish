@@ -36,7 +36,7 @@ namespace Graphics
         
         private void Render(object sender, EventArgs args)
         {
-            while (WindowsMessageLoop.HasNewMessages() == false)
+            while (WindowsMessageLoop.HasNewMessages() == false && Window.IsClosing == false)
             {
                 Window.ClearRenderTarget();
 
