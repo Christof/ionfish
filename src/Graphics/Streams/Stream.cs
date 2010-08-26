@@ -6,8 +6,7 @@ using Buffer = SlimDX.Direct3D10.Buffer;
 
 namespace Graphics.Streams
 {
-    public abstract class Stream<T> : IDisposable
-        where T : struct
+    public abstract class Stream<T> : IDisposable, IStream where T : struct
     {
         private readonly T[] mData;
         protected int ElementSize { get; private set; }

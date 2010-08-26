@@ -6,7 +6,7 @@ using Graphics.Streams;
 using Input;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D10;
-using SlimDX.DXGI;
+using Mesh = Graphics.Streams.Mesh;
 using Vector3 = Math.Vector3;
 using Vector4 = Math.Vector4;
 
@@ -17,12 +17,9 @@ namespace Sandbox
         private Keyboard mKeyboard;
         private InputCommandBinder mInputCommandBinder;
         private InputLayout mInputLayout;
-        private Stream<Vector3> mPositionStream;
-        private Stream<Vector4> mColorStream;
-        private IndexStream mIndexStream;
+        private Mesh mMesh;
         private Camera mCamera;
         private Effect mEffect;
-        private uint[] mIndices;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -30,10 +27,10 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            mPositionStream = new VertexStream<Vector3>(Window.Device, CreatePositions(), 0);
-            mColorStream = new VertexStream<Vector4>(Window.Device, CreateColors(), 1);
-            mIndices = CreateIndices();
-            mIndexStream = new IndexStream(Window.Device, mIndices);
+            mMesh = new Mesh(Window.Device)
+                .CreateVertexStream(StreamUsage.Position, CreatePositions())
+                .CreateVertexStream(StreamUsage.Color, CreateColors())
+                .CreateIndexStream(CreateIndices());
             
             string errors;
             mEffect = Effect.FromFile(Window.Device, "shader.fx", "fx_4_0",
@@ -61,9 +58,7 @@ namespace Sandbox
         {
             Window.Device.InputAssembler.SetInputLayout(mInputLayout);
             Window.Device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-            mPositionStream.OnFrame();
-            mColorStream.OnFrame();
-            mIndexStream.OnFrame();
+            mMesh.OnFrame();
 
             mKeyboard.Update();
             mInputCommandBinder.Update();
@@ -74,18 +69,12 @@ namespace Sandbox
             var technique = mEffect.GetTechniqueByIndex(0);
             var pass = technique.GetPassByIndex(0);
 
-            var inputElements = new[]
-            {
-                new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 0, 1)
-            };
-
-            mInputLayout = new InputLayout(Window.Device, pass.Description.Signature, inputElements);
+            mInputLayout = new InputLayout(Window.Device, pass.Description.Signature, mMesh.GetInputElements());
 
             for (int actualPass = 0; actualPass < technique.Description.PassCount; ++actualPass)
             {
                 pass.Apply();
-                Window.Device.DrawIndexed(mIndices.Length, 0, 0);
+                mMesh.Draw();
             }
         }
 

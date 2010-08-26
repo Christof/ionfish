@@ -54,6 +54,14 @@
     <Compile Include="Game.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimDXExtensions.cs" />
+    <Compile Include="Streams\FormatHelper.cs" />
+    <Compile Include="Streams\IndexStream.cs" />
+    <Compile Include="Streams\IStream.cs" />
+    <Compile Include="Streams\Mesh.cs" />
+    <Compile Include="Streams\Stream.cs" />
+    <Compile Include="Streams\StreamUsage.cs" />
+    <Compile Include="Streams\StreamUsageExtensions.cs" />
+    <Compile Include="Streams\VertexStream.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="WindowsMessageLoop.cs" />
   </ItemGroup>
