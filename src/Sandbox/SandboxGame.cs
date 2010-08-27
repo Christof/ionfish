@@ -50,12 +50,22 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
+            var positions = new[]
+            {
+                new Vector3(0.5f, 0.1f, 0),
+                new Vector3(-0.5f, 0.1f, -1),
+                new Vector3(2f, 0.1f, -2),
+            };
+
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            var world = Matrix.CreateTranslation(new Vector3(0.5f, 0.1f, 0));
-            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-            mBinding.Draw();
+            foreach (var position in positions)
+            {
+                var world = Matrix.CreateTranslation(position);
+                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mBinding.Draw();
+            }
         }
 
         static Vector4[] CreateColors()

@@ -15,6 +15,7 @@ namespace Graphics
         private Form mForm;
         private RenderTargetView mRenderTarget;
         private SwapChain mSwapChain;
+        private DepthStencilView mDepthStencilView;
         public Device Device { get; private set; }
 
         public Window(int width = 1600, int height = 900)
@@ -51,8 +52,20 @@ namespace Graphics
                 MaxZ = 1.0f
             };
 
+            CreateDepthBuffer();
+            var depthStencilStateDescription = new DepthStencilStateDescription
+            {
+                IsDepthEnabled = true,
+                IsStencilEnabled = false,
+                DepthWriteMask = DepthWriteMask.All,
+                DepthComparison = Comparison.Less
+            };
+
+            var depthStencilState = DepthStencilState.FromDescription(Device, depthStencilStateDescription);
+
             Device.Rasterizer.SetViewports(viewport);
-            Device.OutputMerger.SetTargets(mRenderTarget);
+            Device.OutputMerger.SetTargets(mDepthStencilView, mRenderTarget);
+            Device.OutputMerger.DepthStencilState = depthStencilState;
         }
 
         private SwapChain CreateSwapChain(Factory factory)
@@ -73,6 +86,28 @@ namespace Graphics
             return new SwapChain(factory, Device, swapChainDescription);
         }
 
+        private void CreateDepthBuffer()
+        {
+            var textureDescription = new Texture2DDescription
+            {
+                ArraySize = 1,
+                BindFlags = BindFlags.DepthStencil,
+                CpuAccessFlags = CpuAccessFlags.None,
+                Format = Format.D32_Float,
+                Height = mHeight,
+                Width = mWidth,
+                MipLevels = 1,
+                OptionFlags = ResourceOptionFlags.None,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Default
+            };
+
+            using (var depthBuffer = new Texture2D(Device, textureDescription))
+            {
+                mDepthStencilView = new DepthStencilView(Device, depthBuffer);
+            }
+        }
+
         public void Dispose()
         {
             mSwapChain.Dispose();
@@ -84,6 +119,7 @@ namespace Graphics
         public void ClearRenderTarget()
         {
             Device.ClearRenderTargetView(mRenderTarget, new Color4(0, 0, 0));
+            Device.ClearDepthStencilView(mDepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
         }
 
         public void Present()
