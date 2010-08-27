@@ -103,5 +103,19 @@ namespace Math
             It should_have_assigned_value_to_Row_4_Colum_3 = () => resultMatrix.R4C3.ShouldEqual(12290);
             It should_have_assigned_value_to_Row_4_Colum_4 = () => resultMatrix.R4C4.ShouldEqual(12460);
         }
+
+        [Subject(typeof (Matrix))]
+        public class translation
+        {
+            static Matrix translationMatrix;
+
+            Because of = () => translationMatrix = Matrix.CreateTranslation(new Vector3(1, 2, 3));
+
+            It should_create_a_translation_matrix = () => translationMatrix.ShouldEqualWithDelta(new Matrix(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                1, 2, 3, 1));
+        }
     }
 }

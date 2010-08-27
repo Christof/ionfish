@@ -53,7 +53,8 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix);
+            var world = Matrix.CreateTranslation(new Vector3(0.5f, 0.1f, 0));
+            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
             mBinding.Draw();
         }
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace Math
 {
     public class Matrix
@@ -260,6 +262,15 @@ namespace Math
                 left.mR4C1 * right.mR1C2 + left.mR4C2 * right.mR2C2 + left.mR4C3 * right.mR3C2 + left.mR4C4 * right.mR4C2,
                 left.mR4C1 * right.mR1C3 + left.mR4C2 * right.mR2C3 + left.mR4C3 * right.mR3C3 + left.mR4C4 * right.mR4C3,
                 left.mR4C1 * right.mR1C4 + left.mR4C2 * right.mR2C4 + left.mR4C3 * right.mR3C4 + left.mR4C4 * right.mR4C4);
+        }
+
+        public static Matrix CreateTranslation(Vector3 position)
+        {
+            return new Matrix(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                position.X, position.Y, position.Z, 1);
         }
     }
 }
