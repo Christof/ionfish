@@ -16,6 +16,7 @@ namespace Graphics
         private RenderTargetView mRenderTarget;
         private SwapChain mSwapChain;
         private DepthStencilView mDepthStencilView;
+        private DepthStencilState mDepthStencilState;
         public Device Device { get; private set; }
 
         public Window(int width = 1600, int height = 900)
@@ -53,6 +54,14 @@ namespace Graphics
             };
 
             CreateDepthBuffer();
+            CreateStencilState();
+
+            Device.Rasterizer.SetViewports(viewport);
+            Device.OutputMerger.SetTargets(mDepthStencilView, mRenderTarget);
+        }
+
+        private void CreateStencilState()
+        {
             var depthStencilStateDescription = new DepthStencilStateDescription
             {
                 IsDepthEnabled = true,
@@ -61,11 +70,8 @@ namespace Graphics
                 DepthComparison = Comparison.Less
             };
 
-            var depthStencilState = DepthStencilState.FromDescription(Device, depthStencilStateDescription);
-
-            Device.Rasterizer.SetViewports(viewport);
-            Device.OutputMerger.SetTargets(mDepthStencilView, mRenderTarget);
-            Device.OutputMerger.DepthStencilState = depthStencilState;
+            mDepthStencilState = DepthStencilState.FromDescription(Device, depthStencilStateDescription);
+            Device.OutputMerger.DepthStencilState = mDepthStencilState;
         }
 
         private SwapChain CreateSwapChain(Factory factory)
@@ -110,8 +116,10 @@ namespace Graphics
 
         public void Dispose()
         {
+            mDepthStencilState.Dispose();
             mSwapChain.Dispose();
             mRenderTarget.Dispose();
+            mDepthStencilView.Dispose();
             Device.Dispose();
             mForm.Dispose();
         }
