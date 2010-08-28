@@ -22,17 +22,46 @@ namespace Math
         }
 
         /// <summary>
-        /// Generates a new random vector3.
+        /// Generates a new random vector3 with float precision.
+        /// </summary>
+        public Vector3 GetNextRandomFloat()
+        {
+            return new Vector3
+            (
+                GetRandomFloat(mMin.X, mMax.X),
+                GetRandomFloat(mMin.Y, mMax.Y),
+                GetRandomFloat(mMin.Z, mMax.Z)
+            );
+        }
+
+        /// <summary>
+        /// Caluclates a random float value within the min and max value. 
+        /// </summary>
+        /// <param name="min">Minimum float.</param>
+        /// <param name="max">Maximum float.</param>
+        /// <returns>Returns the Random value.</returns>
+        private float GetRandomFloat(float min, float max)
+        {
+            if (min > max)
+            {
+                throw new ArgumentOutOfRangeException("Min value is higher than max value");
+            }
+
+            return (((float)mRandom.NextDouble() * (max - min)) + min);
+        }
+
+        /// <summary>
+        /// Generates a new random vector3 with int precision.
         /// </summary>
         /// <returns>The random vector 3.</returns>
         public Vector3 GetNextRandom()
         {
             return new Vector3
-                (
-                    mRandom.Next(Convert.ToInt32(mMin.X), Convert.ToInt32(mMax.X)),
-                    mRandom.Next(Convert.ToInt32(mMin.Y), Convert.ToInt32(mMax.Y)),
-                    mRandom.Next(Convert.ToInt32(mMin.Z), Convert.ToInt32(mMax.Z))
-                );
+            (
+                mRandom.Next(Convert.ToInt32(mMin.X), Convert.ToInt32(mMax.X)),
+                mRandom.Next(Convert.ToInt32(mMin.Y), Convert.ToInt32(mMax.Y)),
+                mRandom.Next(Convert.ToInt32(mMin.Z), Convert.ToInt32(mMax.Z))
+            );
         }
     }
 }

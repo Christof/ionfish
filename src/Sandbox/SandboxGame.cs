@@ -59,9 +59,9 @@ namespace Sandbox
 
             mPositions = new[]
             {
-                mVector3Random.GetNextRandom(),
-                mVector3Random.GetNextRandom(),
-                mVector3Random.GetNextRandom()
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat()
             };
         }
 
