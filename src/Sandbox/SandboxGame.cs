@@ -2,6 +2,7 @@
 using Graphics;
 using Graphics.Cameras;
 using Graphics.Materials;
+using Graphics.Primitives;
 using Graphics.Streams;
 using Input;
 using Math;
@@ -12,10 +13,10 @@ namespace Sandbox
     {
         private Keyboard mKeyboard;
         private InputCommandBinder mInputCommandBinder;
-        private Mesh mMesh;
         private Camera mCamera;
         private Material mMaterial;
         private MeshMaterialBinding mBinding;
+        private MeshMaterialBinding mTriangleBinding;
         private Vector3RandomGenerator mVector3Random;
         private Vector3[] mPositions;
 
@@ -27,13 +28,12 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            mMesh = new Mesh(Window.Device)
-                .CreateVertexStream(StreamUsage.Position, CreatePositions())
-                .CreateVertexStream(StreamUsage.Color, CreateColors())
-                .CreateIndexStream(CreateIndices());
-            
+            var quadMesh = new Quad(Window.Device);
+            var triangleMesh = new Triangle(Window.Device);
+
             mMaterial = new Material("shader.fx", Window.Device);
-            mBinding = new MeshMaterialBinding(Window.Device, mMaterial, mMesh);
+            mBinding = new MeshMaterialBinding(Window.Device, mMaterial, quadMesh.GetQuad());
+            mTriangleBinding = new MeshMaterialBinding(Window.Device, mMaterial, triangleMesh.GetTriangle());
 
             mKeyboard = new Keyboard();
 
@@ -74,33 +74,9 @@ namespace Sandbox
             {
                 var world = Matrix.CreateTranslation(position);
                 mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-                mBinding.Draw();
+                //mBinding.Draw();
+                mTriangleBinding.Draw();
             }
-        }
-
-        static Vector4[] CreateColors()
-        {
-            var topLeft = new Vector4(1f, 0f, 0f, 0f);
-            var topRight = new Vector4(0f, 1f, 0f, 0f);
-            var bottomLeft = new Vector4(0f, 0f, 1f, 0f);
-            var bottomRight = new Vector4(0.5f, 0.5f, 0.5f, 0f);
-
-            return new[] { topLeft, topRight, bottomLeft, bottomRight };
-        }
-
-        static Vector3[] CreatePositions()
-        {
-            var topLeft = new Vector3(-0.5f, 0.5f, 0f);
-            var topRight = new Vector3(0.5f, 0.5f, 0f);
-            var bottomLeft = new Vector3(-0.5f, -0.5f, 0f);
-            var bottomRight = new Vector3(0.5f, -0.5f, 0f);
-
-            return new[] { topLeft, topRight, bottomLeft, bottomRight };
-        }
-
-        private static uint[] CreateIndices()
-        {
-            return new uint[] { 0, 1, 3, 0, 3, 2 };
         }
     }
 }
