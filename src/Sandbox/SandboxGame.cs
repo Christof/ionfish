@@ -19,6 +19,8 @@ namespace Sandbox
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
+        private const string STRAFE_LEFT = "strafe left";
+        private const string STRAFE_RIGHT = "strafe right";
         private const string ESCAPE = "escape";
 
         protected override void Initialize()
@@ -38,13 +40,17 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(MOVE_FORWARD, () => stand.Position += Vector3.ZAxis * Frametime);
-            commands.Add(MOVE_BACKWARD, () => stand.Position -= Vector3.ZAxis * Frametime);
+            commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * Frametime);
+            commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * Frametime);
+            commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime);
+            commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime);
             commands.Add(ESCAPE, Exit);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
             mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
+            mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
+            mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
         }
 
