@@ -16,6 +16,8 @@ namespace Sandbox
         private Camera mCamera;
         private Material mMaterial;
         private MeshMaterialBinding mBinding;
+        private Vector3RandomGenerator mVector3Random;
+        private Vector3[] mPositions;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -52,21 +54,23 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
+
+            mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
+
+            mPositions = new[]
+            {
+                mVector3Random.GetNextRandom(),
+                mVector3Random.GetNextRandom(),
+                mVector3Random.GetNextRandom()
+            };
         }
 
         protected override void OnFrame()
         {
-            var positions = new[]
-            {
-                new Vector3(0.5f, 0.1f, 0),
-                new Vector3(-0.5f, 0.1f, -1),
-                new Vector3(2f, 0.1f, -2),
-            };
-
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            foreach (var position in positions)
+            foreach (var position in mPositions)
             {
                 var world = Matrix.CreateTranslation(position);
                 mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
