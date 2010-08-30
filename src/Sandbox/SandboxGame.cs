@@ -15,8 +15,9 @@ namespace Sandbox
         private InputCommandBinder mInputCommandBinder;
         private Camera mCamera;
         private Material mMaterial;
-        private MeshMaterialBinding mBinding;
+        private MeshMaterialBinding mQuadBinding;
         private MeshMaterialBinding mTriangleBinding;
+        private MeshMaterialBinding mCubeBinding;
         private Vector3RandomGenerator mVector3Random;
         private Vector3[] mPositions;
 
@@ -30,10 +31,12 @@ namespace Sandbox
         {
             var quadMesh = new Quad(Window.Device);
             var triangleMesh = new Triangle(Window.Device);
+            var cubeMesh = new Cube(Window.Device);
 
             mMaterial = new Material("shader.fx", Window.Device);
-            mBinding = new MeshMaterialBinding(Window.Device, mMaterial, quadMesh.GetQuad());
+            mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, quadMesh.GetQuad());
             mTriangleBinding = new MeshMaterialBinding(Window.Device, mMaterial, triangleMesh.GetTriangle());
+            mCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, cubeMesh.GetQuad());
 
             mKeyboard = new Keyboard();
 
@@ -74,8 +77,9 @@ namespace Sandbox
             {
                 var world = Matrix.CreateTranslation(position);
                 mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-                //mBinding.Draw();
-                mTriangleBinding.Draw();
+                //mQuadBinding.Draw();
+                //mTriangleBinding.Draw();
+                mCubeBinding.Draw();
             }
         }
     }

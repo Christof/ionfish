@@ -24,12 +24,12 @@ namespace Graphics.Primitives
 
         static Vector3[] CreatePositions()
         {
-            var topLeft = new Vector3(-0.5f, 0.5f, 0f);
-            var topRight = new Vector3(0.5f, 0.5f, 0f);
             var bottomLeft = new Vector3(-0.5f, -0.5f, 0f);
+            var topLeft = new Vector3(-0.5f, 0.5f, 0f);
             var bottomRight = new Vector3(0.5f, -0.5f, 0f);
-
-            return new[] { topLeft, topRight, bottomLeft, bottomRight };
+            var topRight = new Vector3(0.5f, 0.5f, 0f);
+            
+            return new[] { bottomLeft, topLeft, bottomRight, topRight};
         }
 
         private static uint[] CreateIndices()
