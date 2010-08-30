@@ -3,7 +3,6 @@ using Graphics;
 using Graphics.Cameras;
 using Graphics.Materials;
 using Graphics.Primitives;
-using Graphics.Streams;
 using Input;
 using Math;
 
@@ -19,7 +18,9 @@ namespace Sandbox
         private MeshMaterialBinding mTriangleBinding;
         private MeshMaterialBinding mCubeBinding;
         private Vector3RandomGenerator mVector3Random;
-        private Vector3[] mPositions;
+        private Vector3[] mCubePositions;
+        private Vector3[] mTrianglePositions;
+        private Vector3[] mQuadPositions;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -59,8 +60,21 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
 
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
+            mCubePositions = new[]
+            {
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat()
+            };
 
-            mPositions = new[]
+            mTrianglePositions = new[]
+            {
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat(),
+                mVector3Random.GetNextRandomFloat()
+            };
+
+            mQuadPositions = new[]
             {
                 mVector3Random.GetNextRandomFloat(),
                 mVector3Random.GetNextRandomFloat(),
@@ -73,13 +87,25 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            foreach (var position in mPositions)
+            foreach (var position in mCubePositions)
             {
                 var world = Matrix.CreateTranslation(position);
                 mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-                //mQuadBinding.Draw();
-                //mTriangleBinding.Draw();
                 mCubeBinding.Draw();
+            }
+
+            foreach (var position in mTrianglePositions)
+            {
+                var world = Matrix.CreateTranslation(position);
+                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mTriangleBinding.Draw();
+            }
+
+            foreach (var position in mQuadPositions)
+            {
+                var world = Matrix.CreateTranslation(position);
+                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mQuadBinding.Draw();
             }
         }
     }
