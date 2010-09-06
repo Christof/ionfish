@@ -71,6 +71,10 @@
     <Compile Include="WindowsMessageLoop.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{32D8EAAC-A6A1-481B-82FA-5C50E5E3C265}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{364AF331-5C72-4D93-9890-40010A656057}</Project>
       <Name>Math</Name>

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Core.Helper;
 using Graphics.Streams;
 using Math;
 using SlimDX.Direct3D10;
@@ -7,6 +9,14 @@ namespace Graphics.Primitives
 {
     public class Cube : Mesh
     {
+        public Cube(Device device, Vector4 color)
+            : base(device)
+        {
+            CreateVertexStream(StreamUsage.Position, CreatePositions());
+            CreateVertexStream(StreamUsage.Color, ArrayHelper.Create(8, color));
+            CreateIndexStream(CreateIndices());
+        }
+
         public Cube(Device device)
             : base(device)
         {
@@ -32,15 +42,15 @@ namespace Graphics.Primitives
 
         private static Vector3[] CreatePositions()
         {
-            var frontbottomLeft = new Vector3(-0.5f, -0.5f, 0f);
-            var fronttopLeft = new Vector3(-0.5f, 0.5f, 0f);
-            var frontbottomRight = new Vector3(0.5f, -0.5f, 0f);
-            var fronttopRight = new Vector3(0.5f, 0.5f, 0f);
+            var frontbottomLeft = new Vector3(-0.5f, -0.5f, 0.5f);
+            var fronttopLeft = new Vector3(-0.5f, 0.5f, 0.5f);
+            var frontbottomRight = new Vector3(0.5f, -0.5f, 0.5f);
+            var fronttopRight = new Vector3(0.5f, 0.5f, 0.5f);
 
-            var backbottomLeft = new Vector3(-0.5f, -0.5f, 0.5f);
-            var backtopLeft = new Vector3(-0.5f, 0.5f, 0.5f);
-            var backbottomRight = new Vector3(0.5f, -0.5f, 0.5f);
-            var backtopRight = new Vector3(0.5f, 0.5f, 0.5f);
+            var backbottomLeft = new Vector3(-0.5f, -0.5f, -0.5f);
+            var backtopLeft = new Vector3(-0.5f, 0.5f, -0.5f);
+            var backbottomRight = new Vector3(0.5f, -0.5f, -0.5f);
+            var backtopRight = new Vector3(0.5f, 0.5f, -0.5f);
 
             return new[] { frontbottomLeft, fronttopLeft, frontbottomRight, fronttopRight, backbottomRight, backtopRight, backbottomLeft, backtopLeft };
         }

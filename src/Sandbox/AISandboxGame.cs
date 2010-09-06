@@ -14,10 +14,11 @@ namespace Sandbox
         private InputCommandBinder mInputCommandBinder;
         private Camera mCamera;
         private Material mMaterial;
-        private MeshMaterialBinding mTriangleBinding;
-        private MeshMaterialBinding mCubeBinding;
+        private MeshMaterialBinding mRefugeeBinding;
+        private MeshMaterialBinding mSeekerBinding;
+        private MeshMaterialBinding mGroundBinding;
         private readonly Kinetic mRefugeeKinetic = new Kinetic(new Vector3(-5, 0, -5));
-        private readonly Kinetic mSeekerKinetic = new Kinetic(new Vector3(10, 0, 10));
+        private readonly Kinetic mSeekerKinetic = new Kinetic(new Vector3(5, 0, 5), new Vector3(0, 0, -10));
         private SeekSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
 
@@ -30,17 +31,19 @@ namespace Sandbox
 
         protected override void Initialize()
         {
-            var triangleMesh = new Triangle(Window.Device);
-            var cubeMesh = new Cube(Window.Device);
-
             mMaterial = new Material("shader.fx", Window.Device);
-            mTriangleBinding = new MeshMaterialBinding(Window.Device, mMaterial, triangleMesh);
-            mCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, cubeMesh);
+            mRefugeeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Cube(Window.Device, new Vector4(0.8f, 0, 0, 0)));
+            mSeekerBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Cube(Window.Device, new Vector4(0, 0, 0.8f, 0)));
+            mGroundBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.2f, 0.2f, 0.2f, 0)));
 
             mKeyboard = new Keyboard();
 
             var stand = new Stand { Position = new Vector3(0, 10, 40) };
-            stand.Direction = -stand.Position.Normalized();
+            //stand.Direction = -stand.Position.Normalized();
+            stand.Position = new Vector3(0, 140, 0);
+            stand.Direction = -Vector3.YAxis;
+            stand.Up = -Vector3.ZAxis;
+
             var lens = new PerspectiveProjectionLens();
             mCamera = new Camera(stand, lens);
 
@@ -60,24 +63,28 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            mSeekSteering = new SeekSteering(mSeekerKinetic, mRefugeeKinetic);
-            mRefugeeSteering = new RefugeeSteering(mRefugeeKinetic, mSeekerKinetic);
+            mSeekSteering = new SeekSteering(mSeekerKinetic, mRefugeeKinetic, 15);
+            mRefugeeSteering = new RefugeeSteering(mRefugeeKinetic, mSeekerKinetic, 15);
         }
 
         protected override void OnFrame()
         {
             mKeyboard.Update();
             mInputCommandBinder.Update();
-            mSeekerKinetic.Update(mSeekSteering, 3, Frametime);
-            mRefugeeKinetic.Update(mRefugeeSteering, 2, Frametime);
+            mSeekerKinetic.Update(mSeekSteering, 10, Frametime);
+            mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
 
             var world = Matrix.CreateTranslation(mSeekerKinetic.Position);
             mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-            mCubeBinding.Draw();
+            mSeekerBinding.Draw();
 
             world = Matrix.CreateTranslation(mRefugeeKinetic.Position);
             mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
-            mTriangleBinding.Draw();
+            mRefugeeBinding.Draw();
+
+            world = Matrix.RotateX(Constants.HALF_PI) * Matrix.Scale(100) * Matrix.CreateTranslation(new Vector3(0, -0.5f, 0));
+            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+            mGroundBinding.Draw();
         }
     }
 
@@ -86,10 +93,15 @@ namespace Sandbox
         public Vector3 Position { get; private set; }
         private Vector3 mVelocity;
 
-        public Kinetic(Vector3 initialPosition)
+        public Kinetic(Vector3 initialPosition, Vector3 initialVelocity)
         {
-            mVelocity = Vector3.Zero;
+            mVelocity = initialVelocity;
             Position = initialPosition;
+        }
+
+        public Kinetic(Vector3 initialPosition)
+            : this(initialPosition, Vector3.Zero)
+        {
         }
 
         public void Update(ISteering steering, float maxSpeed, float time)
@@ -109,18 +121,19 @@ namespace Sandbox
     {
         private readonly Kinetic mCharacter;
         private readonly Kinetic mTarget;
-        private const float MAX_ACCELERATION = 2;
+        private readonly float mMaxAcceleration;
 
-        public SeekSteering(Kinetic character, Kinetic target)
+        public SeekSteering(Kinetic character, Kinetic target, float maxAcceleration)
         {
             mCharacter = character;
             mTarget = target;
+            mMaxAcceleration = maxAcceleration;
         }
 
         public Vector3 GetLinearAcceleration()
         {
             var direction = mTarget.Position - mCharacter.Position;
-            return direction.Normalized() * MAX_ACCELERATION;
+            return direction.Normalized() * mMaxAcceleration;
         }
     }
 
@@ -133,18 +146,19 @@ namespace Sandbox
     {
         private readonly Kinetic mCharacter;
         private readonly Kinetic mTarget;
-        private const float MAX_ACCELERATION = 2;
+        private readonly float mMaxAcceleration;
 
-        public RefugeeSteering(Kinetic character, Kinetic target)
+        public RefugeeSteering(Kinetic character, Kinetic target, float maxAcceleration)
         {
             mCharacter = character;
             mTarget = target;
+            mMaxAcceleration = maxAcceleration;
         }
 
         public Vector3 GetLinearAcceleration()
         {
             var direction = mCharacter.Position - mTarget.Position;
-            return direction.Normalized() * MAX_ACCELERATION;
+            return direction.Normalized() * mMaxAcceleration;
         }
     }
 }
