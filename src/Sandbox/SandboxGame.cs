@@ -27,6 +27,7 @@ namespace Sandbox
         private const string STRAFE_LEFT = "strafe left";
         private const string STRAFE_RIGHT = "strafe right";
         private const string ESCAPE = "escape";
+        private const string TAKE_SCREENSHOT = "take screenshot";
 
         protected override void Initialize()
         {
@@ -51,6 +52,7 @@ namespace Sandbox
             commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime);
             commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime);
             commands.Add(ESCAPE, Exit);
+            commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
@@ -58,6 +60,7 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
+            mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
             mCubePositions = new[]

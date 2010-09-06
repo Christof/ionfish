@@ -17,6 +17,7 @@ namespace Graphics
         private SwapChain mSwapChain;
         private DepthStencilView mDepthStencilView;
         private DepthStencilState mDepthStencilState;
+        private bool mTakeScreenshotInCurrentFrame;
         public Device Device { get; private set; }
 
         public Window(int width = 1600, int height = 900)
@@ -132,7 +133,28 @@ namespace Graphics
 
         public void Present()
         {
+            TakeScreenshotIfRequired();
             mSwapChain.Present(0, PresentFlags.None);
+        }
+        
+        public void TakeScreenshot()
+        {
+            mTakeScreenshotInCurrentFrame = true;
+        }
+
+        public void TakeScreenshotIfRequired()
+        {
+            if (mTakeScreenshotInCurrentFrame == false)
+            {
+                return;
+            }
+
+            using (var texture = Resource.FromSwapChain<Texture2D>(mSwapChain, 0))
+            {
+                Texture2D.ToFile(texture, ImageFileFormat.Png, string.Format("Screenshot_{0:yyyy}_{0:MM}_{0:dd}_{0:HH}_{0:mm}_{0:ss}.png", DateTime.Now));
+            }
+
+            mTakeScreenshotInCurrentFrame = false;
         }
 
         public void SetCaption(string text)
