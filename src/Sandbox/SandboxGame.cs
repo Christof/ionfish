@@ -36,9 +36,9 @@ namespace Sandbox
             var cubeMesh = new Cube(Window.Device);
 
             mMaterial = new Material("shader.fx", Window.Device);
-            mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, quadMesh.GetQuad());
-            mTriangleBinding = new MeshMaterialBinding(Window.Device, mMaterial, triangleMesh.GetTriangle());
-            mCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, cubeMesh.GetQuad());
+            mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, quadMesh);
+            mTriangleBinding = new MeshMaterialBinding(Window.Device, mMaterial, triangleMesh);
+            mCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, cubeMesh);
 
             mKeyboard = new Keyboard();
 
@@ -65,23 +65,23 @@ namespace Sandbox
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
             mCubePositions = new[]
             {
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat()
+                mVector3Random.Next(),
+                mVector3Random.Next(),
+                mVector3Random.Next()
             };
 
             mTrianglePositions = new[]
             {
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat()
+                mVector3Random.Next(),
+                mVector3Random.Next(),
+                mVector3Random.Next()
             };
 
             mQuadPositions = new[]
             {
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat(),
-                mVector3Random.GetNextRandomFloat()
+                mVector3Random.Next(),
+                mVector3Random.Next(),
+                mVector3Random.Next()
             };
         }
 
