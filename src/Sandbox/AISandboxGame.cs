@@ -28,6 +28,8 @@ namespace Sandbox
         private const string STRAFE_RIGHT = "strafe right";
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
+        private const string UP = "up";
+        private const string DOWN = "down";
 
         protected override void Initialize()
         {
@@ -54,6 +56,8 @@ namespace Sandbox
             commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime);
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
+            commands.Add(UP, () => stand.Position += Vector3.YAxis * Frametime);
+            commands.Add(DOWN, () => stand.Position -= Vector3.YAxis * Frametime);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
@@ -62,6 +66,8 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
+            mInputCommandBinder.Bind(Button.R, UP);
+            mInputCommandBinder.Bind(Button.F, DOWN);
 
             mSeekSteering = new SeekSteering(mSeekerKinetic, mRefugeeKinetic, 15);
             mRefugeeSteering = new RefugeeSteering(mRefugeeKinetic, mSeekerKinetic, 15);
