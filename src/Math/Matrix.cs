@@ -267,10 +267,10 @@ namespace Math
         public static Matrix CreateTranslation(Vector3 position)
         {
             return new Matrix(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                position.X, position.Y, position.Z, 1);
+                1, 0, 0, position.X,
+                0, 1, 0, position.Y,
+                0, 0, 1, position.Z,
+                0, 0, 0, 1);
         }
 
         public static Matrix RotateX(float angle)

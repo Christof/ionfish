@@ -93,21 +93,21 @@ namespace Sandbox
             foreach (var position in mCubePositions)
             {
                 var world = Matrix.CreateTranslation(position);
-                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
                 mCubeBinding.Draw();
             }
 
             foreach (var position in mTrianglePositions)
             {
                 var world = Matrix.CreateTranslation(position);
-                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
                 mTriangleBinding.Draw();
             }
 
             foreach (var position in mQuadPositions)
             {
                 var world = Matrix.CreateTranslation(position);
-                mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+                mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
                 mQuadBinding.Draw();
             }
         }

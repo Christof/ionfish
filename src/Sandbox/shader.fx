@@ -17,7 +17,7 @@ PS_IN VS( VS_IN input )
 {
 	PS_IN output = (PS_IN)0;
 	
-	output.pos = mul(float4(input.pos.xyz, 1.0), WorldViewProj);
+	output.pos = mul(WorldViewProj, float4(input.pos.xyz, 1.0));
 	output.col = input.col;
 	
 	return output;

@@ -62,10 +62,10 @@ namespace Graphics.Cameras
             var e = -position;
 
             return new Matrix(
-                u.X, v.X, n.X, 0,
-                u.Y, v.Y, n.Y, 0,
-                u.Z, v.Z, n.Z, 0,
-                u.Dot(e), v.Dot(e), n.Dot(e), 1);
+                u.X, v.X, n.X, u.Dot(e),
+                u.Y, v.Y, n.Y, v.Dot(e),
+                u.Z, v.Z, n.Z, n.Dot(e),
+                0, 0 , 0, 1);
         }
     }
 }

@@ -75,15 +75,15 @@ namespace Sandbox
             mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
 
             var world = Matrix.CreateTranslation(mSeekerKinetic.Position);
-            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mSeekerBinding.Draw();
 
             world = Matrix.CreateTranslation(mRefugeeKinetic.Position);
-            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mRefugeeBinding.Draw();
 
-            world = Matrix.RotateX(Constants.HALF_PI) * Matrix.Scale(100) * Matrix.CreateTranslation(new Vector3(0, -0.5f, 0));
-            mMaterial.SetWorldViewProjectionMatrix(world * mCamera.ViewProjectionMatrix);
+            world = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0)) * Matrix.Scale(100) * Matrix.RotateX(Constants.HALF_PI);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mGroundBinding.Draw();
         }
     }

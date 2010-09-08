@@ -75,8 +75,8 @@ namespace Graphics.Cameras
 
             return new Matrix(f / aspectRatio, 0, 0, 0,
                 0, f, 0, 0,
-                0, 0, -(distanceToFarPlane + distanceToNearPlane) / dp, -1,
-                0, 0, -distanceToFarPlane * distanceToNearPlane / dp, 0);
+                0, 0, -(distanceToFarPlane + distanceToNearPlane) / dp, -distanceToFarPlane * distanceToNearPlane / dp,
+                0, 0, -1, 0);
         }
     }
 }

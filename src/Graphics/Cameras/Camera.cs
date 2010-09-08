@@ -38,7 +38,7 @@ namespace Graphics.Cameras
         {
             get
             {
-                return Stand.ViewMatrix * Lens.ProjectionMatrix;
+                return Lens.ProjectionMatrix * Stand.ViewMatrix;
             }
         }
     }
