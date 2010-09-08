@@ -1,3 +1,4 @@
+using Core.Helper;
 using Graphics.Streams;
 using Math;
 using SlimDX.Direct3D10;
@@ -7,6 +8,14 @@ namespace Graphics.Primitives
 {
     public class Triangle : Mesh
     {
+        public Triangle(Device device, Vector4 color)
+            : base(device)
+        {
+            CreateVertexStream(StreamUsage.Position, CreatePositions());
+            CreateVertexStream(StreamUsage.Color, ArrayHelper.Create(4, color));
+            CreateIndexStream(CreateIndices());
+        }
+
         public Triangle(Device device)
             : base(device)
         {
