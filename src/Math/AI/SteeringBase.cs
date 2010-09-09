@@ -2,11 +2,11 @@
 {
     public abstract class SteeringBase : ISteering
     {
-        protected Kinetic Character { get; set; }
+        protected Kinematic Character { get; set; }
         public float MaxAcceleration { get; private set; }
-        protected Kinetic Target { get; set; }
+        protected Kinematic Target { get; set; }
 
-        protected SteeringBase(Kinetic character, Kinetic target, float maxAcceleration)
+        protected SteeringBase(Kinematic character, Kinematic target, float maxAcceleration)
         {
             Character = character;
             Target = target;

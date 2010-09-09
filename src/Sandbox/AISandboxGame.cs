@@ -18,9 +18,9 @@ namespace Sandbox
         private MeshMaterialBinding mRefugeeBinding;
         private MeshMaterialBinding mSeekerBinding;
         private MeshMaterialBinding mGroundBinding;
-        private readonly Kinetic mRefugeeKinetic = new Kinetic(new Vector3(-5, 0, -5));
-        private readonly Kinetic mSeekerKinetic = new Kinetic(new Vector3(5, 0, 5), new Vector3(0, 0, -10));
-        private SeekSteering mSeekSteering;
+        private readonly Kinematic mRefugeeKinematic = new Kinematic(new Vector3(-5, 0, -5), 7);
+        private readonly Kinematic mSeekerKinematic = new Kinematic(new Vector3(5, 0, 5), 10);
+        private ArrivingSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
         private CameraCommandManager mCameraCommandManager;
 
@@ -54,8 +54,8 @@ namespace Sandbox
 
             mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
 
-            mSeekSteering = new SeekSteering(mSeekerKinetic, mRefugeeKinetic, 15);
-            mRefugeeSteering = new RefugeeSteering(mRefugeeKinetic, mSeekerKinetic, 15);
+            mSeekSteering = new ArrivingSteering(mSeekerKinematic, mRefugeeKinematic, 15, 3);
+            mRefugeeSteering = new RefugeeSteering(mRefugeeKinematic, mSeekerKinematic, 15);
         }
 
         protected override void OnFrame()
@@ -64,14 +64,14 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
             
-            mSeekerKinetic.Update(mSeekSteering, 10, Frametime);
-            mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
+            mSeekerKinematic.Update(mSeekSteering, 10, Frametime);
+            //mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
 
-            var world = Matrix.CreateTranslation(mSeekerKinetic.Position);
+            var world = Matrix.CreateTranslation(mSeekerKinematic.Position);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mSeekerBinding.Draw();
 
-            world = Matrix.CreateTranslation(mRefugeeKinetic.Position);
+            world = Matrix.CreateTranslation(mRefugeeKinematic.Position);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mRefugeeBinding.Draw();
 
