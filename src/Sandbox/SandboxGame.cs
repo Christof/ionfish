@@ -21,11 +21,8 @@ namespace Sandbox
         private Vector3[] mCubePositions;
         private Vector3[] mTrianglePositions;
         private Vector3[] mQuadPositions;
+        private CameraCommandManager mCameraCommandManager;
 
-        private const string MOVE_FORWARD = "move forward";
-        private const string MOVE_BACKWARD = "move backward";
-        private const string STRAFE_LEFT = "strafe left";
-        private const string STRAFE_RIGHT = "strafe right";
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
 
@@ -47,20 +44,14 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * Frametime);
-            commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * Frametime);
-            commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime);
-            commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime);
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
-            mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
-            mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
-            mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
+
+            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
 
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
             mCubePositions = new[]
@@ -87,6 +78,7 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
+            mCameraCommandManager.Update(Frametime);
             mKeyboard.Update();
             mInputCommandBinder.Update();
 

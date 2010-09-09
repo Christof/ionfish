@@ -5,7 +5,6 @@ using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
-using System;
 
 namespace Sandbox
 {
@@ -22,17 +21,10 @@ namespace Sandbox
         private readonly Kinetic mSeekerKinetic = new Kinetic(new Vector3(5, 0, 5), new Vector3(0, 0, -10));
         private SeekSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
-        private float mSpeedFactor = 1;
+        private CameraCommandManager mCameraCommandManager;
 
-        private const string MOVE_FORWARD = "move forward";
-        private const string MOVE_BACKWARD = "move backward";
-        private const string STRAFE_LEFT = "strafe left";
-        private const string STRAFE_RIGHT = "strafe right";
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
-        private const string UP = "up";
-        private const string DOWN = "down";
-        private const string SPEEDFACTOR = "speedfactor";
 
         protected override void Initialize()
         {
@@ -44,7 +36,6 @@ namespace Sandbox
             mKeyboard = new Keyboard();
 
             var stand = new Stand { Position = new Vector3(0, 10, 40) };
-            //stand.Direction = -stand.Position.Normalized();
             stand.Position = new Vector3(0, 140, 0);
             stand.Direction = -Vector3.YAxis;
             stand.Up = -Vector3.ZAxis;
@@ -53,26 +44,14 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * Frametime * mSpeedFactor);
-            commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * Frametime * mSpeedFactor);
-            commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime * mSpeedFactor);
-            commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime * mSpeedFactor);
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
-            commands.Add(UP, () => stand.Position += Vector3.YAxis * Frametime * mSpeedFactor);
-            commands.Add(DOWN, () => stand.Position -= Vector3.YAxis * Frametime * mSpeedFactor);
-            commands.Add(SPEEDFACTOR, () => mSpeedFactor = 20);
-
+            
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            mInputCommandBinder.Bind(Button.LeftShift, SPEEDFACTOR);
-            mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
-            mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
-            mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
-            mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
-            mInputCommandBinder.Bind(Button.R, UP);
-            mInputCommandBinder.Bind(Button.F, DOWN);
+
+            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
 
             mSeekSteering = new SeekSteering(mSeekerKinetic, mRefugeeKinetic, 15);
             mRefugeeSteering = new RefugeeSteering(mRefugeeKinetic, mSeekerKinetic, 15);
@@ -80,7 +59,7 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
-            mSpeedFactor = 1;
+            mCameraCommandManager.Update(Frametime);
             mKeyboard.Update();
             mInputCommandBinder.Update();
             
