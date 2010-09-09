@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\ISteering.cs" />
+    <Compile Include="AI\Kinetic.cs" />
+    <Compile Include="AI\RefugeeSteering.cs" />
+    <Compile Include="AI\SeekSteering.cs" />
+    <Compile Include="AI\SteeringBase.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="MathExtensions.cs" />
