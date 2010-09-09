@@ -112,10 +112,10 @@ namespace Math
             Because of = () => translationMatrix = Matrix.CreateTranslation(new Vector3(1, 2, 3));
 
             It should_create_a_translation_matrix = () => translationMatrix.ShouldEqualWithDelta(new Matrix(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                1, 2, 3, 1));
+                1, 0, 0, 1,
+                0, 1, 0, 2,
+                0, 0, 1, 3,
+                0, 0, 0, 1));
         }
     }
 }

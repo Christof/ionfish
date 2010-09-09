@@ -65,7 +65,7 @@ namespace Graphics.Cameras
                 u.X, v.X, n.X, u.Dot(e),
                 u.Y, v.Y, n.Y, v.Dot(e),
                 u.Z, v.Z, n.Z, n.Dot(e),
-                0, 0 , 0, 1);
+                0, 0, 0, 1);
         }
     }
 }
