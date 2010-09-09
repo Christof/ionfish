@@ -264,6 +264,15 @@ namespace Math
                 left.mR4C1 * right.mR1C4 + left.mR4C2 * right.mR2C4 + left.mR4C3 * right.mR3C4 + left.mR4C4 * right.mR4C4);
         }
 
+        public static Vector4 operator *(Matrix matrix, Vector4 columnVector)
+        {
+            return new Vector4(
+                matrix.R1C1 * columnVector.X + matrix.R1C2 * columnVector.Y + matrix.R1C3 * columnVector.Z + matrix.R1C4 * columnVector.W,
+                matrix.R2C1 * columnVector.X + matrix.R2C2 * columnVector.Y + matrix.R2C3 * columnVector.Z + matrix.R2C4 * columnVector.W,
+                matrix.R3C1 * columnVector.X + matrix.R3C2 * columnVector.Y + matrix.R3C3 * columnVector.Z + matrix.R3C4 * columnVector.W,
+                matrix.R4C1 * columnVector.X + matrix.R4C2 * columnVector.Y + matrix.R4C3 * columnVector.Z + matrix.R4C4 * columnVector.W);
+        }
+
         public static Matrix CreateTranslation(Vector3 position)
         {
             return new Matrix(
