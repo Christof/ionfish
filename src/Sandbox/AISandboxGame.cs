@@ -82,8 +82,9 @@ namespace Sandbox
 
     class Kinetic
     {
-        public Vector3 Position { get; private set; }
         private Vector3 mVelocity;
+        public Vector3 Position { get; private set; }
+        public float MaxSpeed { get; private set; }
 
         public Kinetic(Vector3 initialPosition, Vector3 initialVelocity)
         {
@@ -96,11 +97,12 @@ namespace Sandbox
         {
         }
 
-        public void Update(ISteering steering, float maxSpeed, float time)
+        public void Update(ISteering steering, float maxSpeed, float frametime)
         {
-            Position += mVelocity * time;
+            MaxSpeed = maxSpeed;
+            Position += mVelocity * frametime;
 
-            mVelocity += steering.GetLinearAcceleration() * time;
+            mVelocity += steering.GetLinearAcceleration() * frametime;
 
             if (mVelocity.Length > maxSpeed)
             {
@@ -109,23 +111,17 @@ namespace Sandbox
         }
     }
 
-    class SeekSteering : ISteering
+    class SeekSteering : SteeringBase
     {
-        private readonly Kinetic mCharacter;
-        private readonly Kinetic mTarget;
-        private readonly float mMaxAcceleration;
-
         public SeekSteering(Kinetic character, Kinetic target, float maxAcceleration)
+            : base(character,target, maxAcceleration)
         {
-            mCharacter = character;
-            mTarget = target;
-            mMaxAcceleration = maxAcceleration;
         }
 
-        public Vector3 GetLinearAcceleration()
+        public override Vector3 GetLinearAcceleration()
         {
-            var direction = mTarget.Position - mCharacter.Position;
-            return direction.Normalized() * mMaxAcceleration;
+            var direction = Target.Position - Character.Position;
+            return direction.Normalized() * MaxAcceleration;
         }
     }
 
@@ -134,23 +130,33 @@ namespace Sandbox
         Vector3 GetLinearAcceleration();
     }
 
-    class RefugeeSteering : ISteering
+    internal abstract class SteeringBase : ISteering
     {
-        private readonly Kinetic mCharacter;
-        private readonly Kinetic mTarget;
-        private readonly float mMaxAcceleration;
+        protected Kinetic Character { get; set; }
+        public float MaxAcceleration { get; private set; }
+        protected Kinetic Target { get; set; }
 
-        public RefugeeSteering(Kinetic character, Kinetic target, float maxAcceleration)
+        protected SteeringBase(Kinetic character, Kinetic target, float maxAcceleration)
         {
-            mCharacter = character;
-            mTarget = target;
-            mMaxAcceleration = maxAcceleration;
+            Character = character;
+            Target = target;
+            MaxAcceleration = maxAcceleration;
         }
 
-        public Vector3 GetLinearAcceleration()
+        public abstract Vector3 GetLinearAcceleration();
+    }
+
+    class RefugeeSteering : SteeringBase
+    {
+        public RefugeeSteering(Kinetic character, Kinetic target, float maxAcceleration)
+            : base(character, target, maxAcceleration)
         {
-            var direction = mCharacter.Position - mTarget.Position;
-            return direction.Normalized() * mMaxAcceleration;
+        }
+
+        public override Vector3 GetLinearAcceleration()
+        {
+            var direction = Character.Position - Target.Position;
+            return direction.Normalized() * MaxAcceleration;
         }
     }
 }
