@@ -17,11 +17,14 @@ namespace Sandbox
         private Material mMaterial;
         private MeshMaterialBinding mRefugeeBinding;
         private MeshMaterialBinding mSeekerBinding;
+        private MeshMaterialBinding mArriveBinding;
         private MeshMaterialBinding mGroundBinding;
         private readonly Kinematic mRefugeeKinematic = new Kinematic(new Vector3(-5, 0, -5), 7);
-        private readonly Kinematic mSeekerKinematic = new Kinematic(new Vector3(5, 0, 5), 10);
-        private ArrivingSteering mSeekSteering;
+        private readonly Kinematic mSeekerKinematic = new Kinematic(new Vector3(5, 0, 5), 10, new Vector3(0, 0, -5));
+        private readonly Kinematic mArriveKinematic = new Kinematic(new Vector3(2, 0, -10), 8);
+        private SeekSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
+        private ArrivingSteering mArriveSteering;
         private CameraCommandManager mCameraCommandManager;
 
         private const string ESCAPE = "escape";
@@ -32,6 +35,7 @@ namespace Sandbox
             mMaterial = new Material("shader.fx", Window.Device);
             mRefugeeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Cube(Window.Device, new Vector4(0.8f, 0, 0, 0)));
             mSeekerBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Cube(Window.Device, new Vector4(0, 0, 0.8f, 0)));
+            mArriveBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Cube(Window.Device, new Vector4(0, 0.8f, 0, 0)));
             mGroundBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.2f, 0.2f, 0.2f, 0)));
 
             mKeyboard = new Keyboard();
@@ -54,7 +58,8 @@ namespace Sandbox
 
             mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
 
-            mSeekSteering = new ArrivingSteering(mSeekerKinematic, mRefugeeKinematic, 15, 3);
+            mSeekSteering = new SeekSteering(mSeekerKinematic, mRefugeeKinematic, 15);
+            mArriveSteering = new ArrivingSteering(mArriveKinematic, mRefugeeKinematic, maxAcceleration: 15, slowRadius: 4, satisfactionRadius: 2);
             mRefugeeSteering = new RefugeeSteering(mRefugeeKinematic, mSeekerKinematic, 15);
         }
 
@@ -65,7 +70,8 @@ namespace Sandbox
             mInputCommandBinder.Update();
             
             mSeekerKinematic.Update(mSeekSteering, 10, Frametime);
-            //mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
+            mRefugeeKinematic.Update(mRefugeeSteering, 7, Frametime);
+            mArriveKinematic.Update(mArriveSteering, 10, Frametime);
 
             var world = Matrix.CreateTranslation(mSeekerKinematic.Position);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
@@ -74,6 +80,10 @@ namespace Sandbox
             world = Matrix.CreateTranslation(mRefugeeKinematic.Position);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mRefugeeBinding.Draw();
+
+            world = Matrix.CreateTranslation(mArriveKinematic.Position);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mArriveBinding.Draw();
 
             world = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0)) * Matrix.Scale(100) * Matrix.RotateX(Constants.HALF_PI);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);

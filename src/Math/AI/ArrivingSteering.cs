@@ -3,14 +3,14 @@ namespace Math.AI
     public class ArrivingSteering : SteeringBase
     {
         private readonly float mSatisfactionRadius;
-        private readonly float mSlowRadius = 18;
+        private readonly float mSlowRadius;
         private const float TIME_TO_TARGET = 0.1f;
-        private float mMaxSpeed = 10;
 
-        public ArrivingSteering(Kinematic character, Kinematic target, float maxAcceleration, float satisfactionRadius)
+        public ArrivingSteering(Kinematic character, Kinematic target, float maxAcceleration, float slowRadius, float satisfactionRadius)
             : base(character, target, maxAcceleration)
         {
             mSatisfactionRadius = satisfactionRadius;
+            mSlowRadius = slowRadius;
         }
 
         public override Vector3 GetLinearAcceleration()
@@ -23,7 +23,8 @@ namespace Math.AI
                 return -Character.Velocity;
             }
 
-            var targetSpeed = distance > mSlowRadius ? mMaxSpeed : mMaxSpeed * distance / mSlowRadius;
+            var maxSpeed = Character.MaxSpeed;
+            var targetSpeed = distance > mSlowRadius ? maxSpeed : maxSpeed * distance / mSlowRadius;
 
             var targetVelocity = direction.Normalized() * targetSpeed;
 
