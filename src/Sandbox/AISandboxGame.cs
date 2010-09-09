@@ -5,6 +5,7 @@ using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
+using System;
 
 namespace Sandbox
 {
@@ -21,6 +22,7 @@ namespace Sandbox
         private readonly Kinetic mSeekerKinetic = new Kinetic(new Vector3(5, 0, 5), new Vector3(0, 0, -10));
         private SeekSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
+        private float mSpeedFactor = 1;
 
         private const string MOVE_FORWARD = "move forward";
         private const string MOVE_BACKWARD = "move backward";
@@ -30,6 +32,7 @@ namespace Sandbox
         private const string TAKE_SCREENSHOT = "take screenshot";
         private const string UP = "up";
         private const string DOWN = "down";
+        private const string SPEEDFACTOR = "speedfactor";
 
         protected override void Initialize()
         {
@@ -50,16 +53,18 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * Frametime);
-            commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * Frametime);
-            commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime);
-            commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime);
+            commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * Frametime * mSpeedFactor);
+            commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * Frametime * mSpeedFactor);
+            commands.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * Frametime * mSpeedFactor);
+            commands.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * Frametime * mSpeedFactor);
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
-            commands.Add(UP, () => stand.Position += Vector3.YAxis * Frametime);
-            commands.Add(DOWN, () => stand.Position -= Vector3.YAxis * Frametime);
+            commands.Add(UP, () => stand.Position += Vector3.YAxis * Frametime * mSpeedFactor);
+            commands.Add(DOWN, () => stand.Position -= Vector3.YAxis * Frametime * mSpeedFactor);
+            commands.Add(SPEEDFACTOR, () => mSpeedFactor = 20);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
+            mInputCommandBinder.Bind(Button.LeftShift, SPEEDFACTOR);
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
             mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
@@ -75,8 +80,10 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
+            mSpeedFactor = 1;
             mKeyboard.Update();
             mInputCommandBinder.Update();
+            
             mSeekerKinetic.Update(mSeekSteering, 10, Frametime);
             mRefugeeKinetic.Update(mRefugeeSteering, 7, Frametime);
 
