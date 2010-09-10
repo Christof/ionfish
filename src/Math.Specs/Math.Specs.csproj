@@ -50,6 +50,7 @@
     <Compile Include="Spec_Matrix.cs" />
     <Compile Include="Spec_Vector2.cs" />
     <Compile Include="Spec_Vector3.cs" />
+    <Compile Include="Spec_Vector3RandomGenerator.cs" />
     <Compile Include="Spec_Vector4.cs" />
   </ItemGroup>
   <ItemGroup>
