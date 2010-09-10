@@ -14,7 +14,7 @@ namespace Graphics.Cameras
         /// </summary>
         public PerspectiveProjectionLens()
         {
-            AspectRatio = 4.0f / 3.0f;
+            AspectRatio = 16.0f / 9.0f;
             HorizontalFieldOfView = 0.75f;
             DistanceToFarPlane = 100000f;
             DistanceToNearPlane = 0.001f;
