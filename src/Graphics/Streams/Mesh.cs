@@ -11,6 +11,7 @@ namespace Graphics.Streams
         private readonly List<InputElement> mInputElements = new List<InputElement>();
         private int mSlot;
         private int mIndexCount;
+        private PrimitiveTopology mPrimitiveTopology;
 
         public Mesh(Device device)
         {
@@ -28,8 +29,9 @@ namespace Graphics.Streams
             return this;
         }
 
-        public Mesh CreateIndexStream(uint[] data)
+        public Mesh CreateIndexStream(uint[] data, PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList)
         {
+            mPrimitiveTopology = primitiveTopology;
             mIndexCount = data.Length;
             mStreams.Add(new IndexStream(mDevice, data));
 
@@ -43,7 +45,7 @@ namespace Graphics.Streams
 
         public void OnFrame()
         {
-            mDevice.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            mDevice.InputAssembler.SetPrimitiveTopology(mPrimitiveTopology);
             foreach (var stream in mStreams)
             {
                 stream.OnFrame();
