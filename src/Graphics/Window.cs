@@ -54,11 +54,31 @@ namespace Graphics
                 MaxZ = 1.0f
             };
 
+            SetRasterizerState();
             CreateDepthBuffer();
             CreateStencilState();
 
             Device.Rasterizer.SetViewports(viewport);
             Device.OutputMerger.SetTargets(mDepthStencilView, mRenderTarget);
+        }
+
+        private void SetRasterizerState()
+        {
+            var rasterizerState = new RasterizerStateDescription
+            {
+                CullMode = CullMode.Back,
+                FillMode = FillMode.Solid,
+                IsFrontCounterclockwise = false,
+                DepthBias = 0,
+                DepthBiasClamp = 0,
+                SlopeScaledDepthBias = 0,
+                IsDepthClipEnabled = true,
+                IsScissorEnabled = false,
+                IsMultisampleEnabled = false,
+                IsAntialiasedLineEnabled = true
+            };
+
+            Device.Rasterizer.State = RasterizerState.FromDescription(Device, rasterizerState);
         }
 
         private void CreateStencilState()
