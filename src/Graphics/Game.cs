@@ -12,6 +12,7 @@ namespace Graphics
         private readonly float mFrequency = Stopwatch.Frequency;
         protected Window Window { get; private set; }
         protected float Frametime { get; private set; }
+        protected float Gametime { get; private set; }
 
         protected Game()
         {
@@ -48,6 +49,7 @@ namespace Graphics
                 long now = mStopwatch.ElapsedTicks;
                 Frametime = (now - mLast) / mFrequency;
                 mLast = now;
+                Gametime = now / mFrequency;
                 mCounter++;
 
                 Window.SetCaption(string.Format("{0:000.000} ms | {1} FPS | {2} Avg FPS | {3} Frames", 
