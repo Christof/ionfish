@@ -2,7 +2,7 @@ using System;
 
 namespace Math
 {
-    public class Matrix
+    public struct Matrix
     {
         private static readonly Matrix IDENTITY = new Matrix(
             1.0f, 0.0f, 0.0f, 0.0f,
