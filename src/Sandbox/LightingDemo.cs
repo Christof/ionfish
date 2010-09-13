@@ -66,7 +66,9 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix);
+            var world = Matrix.RotateX(Gametime);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(Matrix.RotateX(Gametime));
             mSphereBinding.Draw();
         }
     }

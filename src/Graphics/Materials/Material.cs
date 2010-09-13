@@ -27,10 +27,16 @@ namespace Graphics.Materials
             mEffect.GetVariableBySemantic("WorldViewProjection")
                 .AsMatrix().SetMatrix(matrix.ToSlimDX());
         }
-
+        
         public EffectPass GetFirstPass()
         {
             return mEffect.GetTechniqueByIndex(0).GetPassByIndex(0);
+        }
+
+        public void SetWorld(Matrix worldMatrix)
+        {
+            mEffect.GetVariableBySemantic("World")
+                .AsMatrix().SetMatrix(worldMatrix.ToSlimDX());
         }
     }
 }
