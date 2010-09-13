@@ -52,11 +52,15 @@
   <ItemGroup>
     <Compile Include="AISandboxGame.cs" />
     <Compile Include="CameraCommandManager.cs" />
+    <Compile Include="LightingDemo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SandboxGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lighting.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="shader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

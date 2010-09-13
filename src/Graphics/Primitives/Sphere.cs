@@ -14,6 +14,7 @@ namespace Graphics.Primitives
         {
             var positionCount = (rings + 1) * (columns + 1);
             var positions = new Vector3[positionCount];
+            var normals = new Vector3[positionCount];
             var colors = new Vector4[positionCount];
             var indices = new uint[2 * rings * (columns + 1)];
 
@@ -27,14 +28,15 @@ namespace Graphics.Primitives
 
                 for (uint column = 0; column < columns + 1; column++)
                 {
-                    var positon = new Vector3(r0 * Functions.Sin(column * deltaColumnAngle), y0,
+                    var normal = new Vector3(r0 * Functions.Sin(column * deltaColumnAngle), y0,
                         r0 * Functions.Cos(column * deltaColumnAngle));
                     //var uv = new Vector2(column / (float) columns, 1 - ring / (float) rings);
 
                     var index = ring * (columns + 1) + column;
-                    positions[index] = positon * radius;
-                    colors[index] = new Vector4(System.Math.Abs(positon.X), System.Math.Abs(positon.Y),
-                        System.Math.Abs(positon.Z), 1);
+                    positions[index] = normal * radius;
+                    normals[index] = normal;
+                    colors[index] = new Vector4(System.Math.Abs(normal.X), System.Math.Abs(normal.Y),
+                        System.Math.Abs(normal.Z), 1);
 
                     if (ring < rings)
                     {
@@ -47,6 +49,7 @@ namespace Graphics.Primitives
 
             CreateVertexStream(StreamUsage.Position, positions);
             CreateIndexStream(indices, PrimitiveTopology.TriangleStrip);
+            CreateVertexStream(StreamUsage.Normal, normals);
             CreateVertexStream(StreamUsage.Color, colors);
             //CreateVertexStream(StreamUsage.Color, ArrayHelper.Create(positions.Count, new Vector4(0.5f, 0.5f, 1, 1)));
         }

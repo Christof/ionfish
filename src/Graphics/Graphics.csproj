@@ -52,6 +52,7 @@
     <Compile Include="Cameras\ICamera.cs" />
     <Compile Include="Cameras\ILens.cs" />
     <Compile Include="Cameras\IStand.cs" />
+    <Compile Include="Cameras\OrbitingStand.cs" />
     <Compile Include="Cameras\PerspectiveProjectionLens.cs" />
     <Compile Include="Cameras\Stand.cs" />
     <Compile Include="Game.cs" />

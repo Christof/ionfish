@@ -4,7 +4,7 @@ namespace Sandbox
     {
         static void Main()
         {
-            using (var game = new AISandboxGame())
+            using (var game = new LightingDemo())
             {
                 game.Run();
             }

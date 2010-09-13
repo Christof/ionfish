@@ -12,6 +12,8 @@ namespace Graphics.Streams
                     return "POSITION";
                 case StreamUsage.Color:
                     return "COLOR";
+                case StreamUsage.Normal:
+                    return "NORMAL";
                 default:
                     throw new ArgumentException();
             }
