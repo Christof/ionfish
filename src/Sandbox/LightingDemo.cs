@@ -46,19 +46,19 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            //commands.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * mFrameTime * mSpeedFactor);
-            //commands.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * mFrameTime * mSpeedFactor);
+            commands.Add(MOVE_BACKWARD, () => stand.Radius += Frametime);
+            commands.Add(MOVE_FORWARD, () => stand.Radius -= Frametime);
             commands.Add(STRAFE_RIGHT, () => stand.Azimuth += Frametime);
             commands.Add(STRAFE_LEFT, () => stand.Azimuth -= Frametime);
-            //commands.Add(UP, () => stand.Position += Vector3.YAxis * mFrameTime * mSpeedFactor);
-            //commands.Add(DOWN, () => stand.Position -= Vector3.YAxis * mFrameTime * mSpeedFactor);
+            commands.Add(UP, () => stand.Declination += Frametime);
+            commands.Add(DOWN, () => stand.Declination -= Frametime);
 
-            //mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
-            //mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
+            mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
+            mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
-            //mInputCommandBinder.Bind(Button.R, UP);
-            //mInputCommandBinder.Bind(Button.F, DOWN);
+            mInputCommandBinder.Bind(Button.R, UP);
+            mInputCommandBinder.Bind(Button.F, DOWN);
         }
 
         protected override void OnFrame()
