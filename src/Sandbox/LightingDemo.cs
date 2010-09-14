@@ -15,6 +15,7 @@ namespace Sandbox
         private Camera mCamera;
         private Material mMaterial;
         private MeshMaterialBinding mSphereBinding;
+        private MeshMaterialBinding mQuadBinding;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -31,10 +32,11 @@ namespace Sandbox
 
             mMaterial = new Material("lighting.fx", Window.Device);
             mSphereBinding = new MeshMaterialBinding(Window.Device, mMaterial, sphereMesh);
+            mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.6f, 0.6f, 0.6f, 0)));
 
             mKeyboard = new Keyboard();
 
-            var stand = new OrbitingStand { Radius = 5 };
+            var stand = new OrbitingStand { Radius = 7 };
             var lens = new PerspectiveProjectionLens();
             mCamera = new Camera(stand, lens);
 
@@ -50,8 +52,8 @@ namespace Sandbox
             commands.Add(MOVE_FORWARD, () => stand.Radius -= Frametime);
             commands.Add(STRAFE_RIGHT, () => stand.Azimuth += Frametime);
             commands.Add(STRAFE_LEFT, () => stand.Azimuth -= Frametime);
-            commands.Add(UP, () => stand.Declination += Frametime);
-            commands.Add(DOWN, () => stand.Declination -= Frametime);
+            commands.Add(UP, () => stand.Declination -= Frametime);
+            commands.Add(DOWN, () => stand.Declination += Frametime);
 
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
             mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
@@ -70,6 +72,10 @@ namespace Sandbox
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(Matrix.RotateX(Gametime));
             mSphereBinding.Draw();
+
+            world = Matrix.CreateTranslation(new Vector3(0, -1f, 0)) * Matrix.Scale(10) * Matrix.RotateX(-Constants.HALF_PI);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mQuadBinding.Draw();
         }
     }
 }
