@@ -73,8 +73,9 @@ namespace Sandbox
             mMaterial.SetWorld(Matrix.RotateX(Gametime));
             mSphereBinding.Draw();
 
-            world = Matrix.CreateTranslation(new Vector3(0, -1f, 0)) * Matrix.Scale(10) * Matrix.RotateX(-Constants.HALF_PI);
+            world = Matrix.CreateTranslation(new Vector3(0f, 0f, 0f)) * Matrix.Scale(5);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(Matrix.RotateX(-Constants.HALF_PI));
             mQuadBinding.Draw();
         }
     }

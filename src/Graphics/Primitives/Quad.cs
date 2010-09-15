@@ -48,10 +48,10 @@ namespace Graphics.Primitives
 
         private static Vector3[] CreateNormals()
         {
-            var bottomLeft = Vector3.XAxis;
-            var topLeft = Vector3.XAxis;
-            var bottomRight = Vector3.XAxis;
-            var topRight = Vector3.XAxis;
+            var bottomLeft = Vector3.ZAxis;
+            var topLeft = Vector3.ZAxis;
+            var bottomRight = Vector3.ZAxis;
+            var topRight = Vector3.ZAxis;
 
             return new[] { bottomLeft, topLeft, bottomRight, topRight };
         }
