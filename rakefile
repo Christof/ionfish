@@ -15,3 +15,12 @@ end
 
 desc "Build the solution and run the specs"
 task :default => [:msbuild, :mspec]
+
+desc "Installs all dependencies using nu"
+task :nu do
+	instance_eval(File.read("Gemfile"))
+end
+
+def gem(name, version)
+	sh "nu install #{name} --version #{version}"
+end

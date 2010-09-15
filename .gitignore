@@ -17,3 +17,6 @@ NDependOut
 /Reports
 *.gallio.user
 *.html
+*.swp
+/lib
+/lib/*
