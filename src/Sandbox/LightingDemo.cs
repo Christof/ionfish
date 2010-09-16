@@ -70,12 +70,33 @@ namespace Sandbox
 
             RenderSphere();   
             RenderGround();
+            RenderBackwall();
+            RenderRightwall();
         }
 
         void RenderGround()
         {
             var rotation = Matrix.RotateX(-Constants.HALF_PI);
             var world = Matrix.CreateTranslation(new Vector3(0f, -1f, 0f)) * Matrix.Scale(5) * rotation;
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(rotation);
+
+            mQuadBinding.Draw();
+        }
+
+        void RenderBackwall()
+        {
+            var world = Matrix.CreateTranslation(new Vector3(0f, 1.5f, -2.5f)) * Matrix.Scale(5);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(Matrix.Identity);
+
+            mQuadBinding.Draw();
+        }
+
+        void RenderRightwall()
+        {
+            var rotation = Matrix.RotateY(-Constants.HALF_PI);
+            var world = Matrix.CreateTranslation(new Vector3(2.5f, 1.5f, 0)) * Matrix.Scale(5) * rotation;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotation);
 
