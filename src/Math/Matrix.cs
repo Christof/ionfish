@@ -291,6 +291,24 @@ namespace Math
                 0, 0, 0, 1);
         }
 
+        public static Matrix RotateY(float angle)
+        {
+            return new Matrix(
+                Functions.Cos(angle), 0, Functions.Sin(angle), 0,
+                0, 1, 0, 0,
+                -Functions.Sin(angle), 0, Functions.Cos(angle), 0,
+                0, 0, 0, 1);
+        }
+
+        public static Matrix RotateZ(float angle)
+        {
+            return new Matrix(
+                Functions.Cos(angle), -Functions.Sin(angle), 0, 0,
+                Functions.Sin(angle), Functions.Cos(angle), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+        }
+
         public static Matrix Scale(float factor)
         {
             return new Matrix(

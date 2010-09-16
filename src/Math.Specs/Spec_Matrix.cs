@@ -153,6 +153,28 @@ namespace Math
                 rotatedVector.ShouldEqual(new Vector4(3, -1, 2, 1));
         }
 
+        [Subject(typeof(Matrix))]
+        public class rotation_y
+        {
+            static Vector4 rotatedVector;
+
+            Because of = () => rotatedVector = Matrix.RotateY(Constants.HALF_PI) * new Vector4(3, 2, 1, 1);
+
+            It should_have_rotated_the_vector = () =>
+                rotatedVector.ShouldEqual(new Vector4(1, 2, -3, 1));
+        }
+
+        [Subject(typeof(Matrix))]
+        public class rotation_z
+        {
+            static Vector4 rotatedVector;
+
+            Because of = () => rotatedVector = Matrix.RotateZ(Constants.HALF_PI) * new Vector4(3, 2, 1, 1);
+
+            It should_have_rotated_the_vector = () =>
+                rotatedVector.ShouldEqual(new Vector4(-2, 3, 1, 1));
+        }
+
         [Subject(typeof (Matrix))]
         public class scale
         {
