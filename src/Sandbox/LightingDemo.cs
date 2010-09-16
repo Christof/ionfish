@@ -16,6 +16,7 @@ namespace Sandbox
         private Material mMaterial;
         private MeshMaterialBinding mSphereBinding;
         private MeshMaterialBinding mQuadBinding;
+        MeshMaterialBinding mCube;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -33,6 +34,7 @@ namespace Sandbox
             mMaterial = new Material("lighting.fx", Window.Device);
             mSphereBinding = new MeshMaterialBinding(Window.Device, mMaterial, sphereMesh);
             mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.6f, 0.6f, 0.6f, 0)));
+            mCube = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device));
 
             mKeyboard = new Keyboard();
 
@@ -68,7 +70,9 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            RenderSphere();   
+            //RenderSphere();
+            RenderCube();
+
             RenderGround();
             RenderBackwall();
             RenderRightwall();
@@ -111,6 +115,16 @@ namespace Sandbox
             mMaterial.SetWorld(rotateX);
 
             mSphereBinding.Draw();
+        }
+
+        void RenderCube()
+        {
+            var rotateX = Matrix.RotateX(Gametime) * Matrix.RotateZ(Gametime) * Matrix.RotateY(Gametime);
+            var world = rotateX;
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(rotateX);
+
+            mCube.Draw();
         }
     }
 }

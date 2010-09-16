@@ -58,6 +58,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Materials\Material.cs" />
     <Compile Include="MeshMaterialBinding.cs" />
+    <Compile Include="Primitives\CubeWithNormals.cs" />
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\Quad.cs" />
     <Compile Include="Primitives\Sphere.cs" />
