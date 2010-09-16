@@ -48,12 +48,7 @@ namespace Graphics.Primitives
 
         private static Vector3[] CreateNormals()
         {
-            var bottomLeft = Vector3.ZAxis;
-            var topLeft = Vector3.ZAxis;
-            var bottomRight = Vector3.ZAxis;
-            var topRight = Vector3.ZAxis;
-
-            return new[] { bottomLeft, topLeft, bottomRight, topRight };
+            return ArrayHelper.Create(4, Vector3.ZAxis);
         }
 
         private static uint[] CreateIndices()

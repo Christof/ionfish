@@ -68,15 +68,28 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
-            var world = Matrix.RotateX(Gametime);
-            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
-            mMaterial.SetWorld(Matrix.RotateX(Gametime));
-            mSphereBinding.Draw();
+            RenderSphere();   
+            RenderGround();
+        }
 
-            world = Matrix.CreateTranslation(new Vector3(0f, 0f, 0f)) * Matrix.Scale(5);
+        void RenderGround()
+        {
+            var rotation = Matrix.RotateX(-Constants.HALF_PI);
+            var world = Matrix.CreateTranslation(new Vector3(0f, -1f, 0f)) * Matrix.Scale(5) * rotation;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
-            mMaterial.SetWorld(Matrix.RotateX(-Constants.HALF_PI));
+            mMaterial.SetWorld(rotation);
+
             mQuadBinding.Draw();
+        }
+
+        void RenderSphere()
+        {
+            var rotateX = Matrix.RotateX(Gametime);
+            var world = rotateX;
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mMaterial.SetWorld(rotateX);
+
+            mSphereBinding.Draw();
         }
     }
 }
