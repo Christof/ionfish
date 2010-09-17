@@ -8,7 +8,7 @@ end
 
 desc "Runs specs"
 mspec do |mspec|
-	mspec.command = "../machine.specifications/Build/Release/mspec.exe"
+	mspec.command = "lib/machine.specifications/net40/mspec.exe"
 	mspec.assemblies Dir["bin/*.Specs.dll"]
 	mspec.html_output = "./specs.html"
 end
