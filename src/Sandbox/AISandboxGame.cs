@@ -40,7 +40,7 @@ namespace Sandbox
 
             mKeyboard = new Keyboard();
 
-            var stand = new Stand { Position = new Vector3(0, 10, 40) };
+            var stand = new Stand();
             stand.Position = new Vector3(0, 140, 0);
             stand.Direction = -Vector3.YAxis;
             stand.Up = -Vector3.ZAxis;
@@ -85,7 +85,7 @@ namespace Sandbox
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mArriveBinding.Draw();
 
-            world = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0)) * Matrix.Scale(100) * Matrix.RotateX(Constants.HALF_PI);
+            world = Matrix.CreateTranslation(new Vector3(0, -2.5f, 0)) * Matrix.Scale(100) * Matrix.RotateX(-Constants.HALF_PI);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mGroundBinding.Draw();
         }

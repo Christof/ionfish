@@ -52,10 +52,10 @@ namespace Sandbox
 
             commands.Add(MOVE_BACKWARD, () => stand.Radius += Frametime);
             commands.Add(MOVE_FORWARD, () => stand.Radius -= Frametime);
-            commands.Add(STRAFE_RIGHT, () => stand.Azimuth += Frametime);
-            commands.Add(STRAFE_LEFT, () => stand.Azimuth -= Frametime);
-            commands.Add(UP, () => stand.Declination -= Frametime);
-            commands.Add(DOWN, () => stand.Declination += Frametime);
+            commands.Add(STRAFE_RIGHT, () => stand.Azimuth -= Frametime);
+            commands.Add(STRAFE_LEFT, () => stand.Azimuth += Frametime);
+            commands.Add(UP, () => stand.Declination += Frametime);
+            commands.Add(DOWN, () => stand.Declination -= Frametime);
 
             mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
             mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
@@ -75,7 +75,7 @@ namespace Sandbox
 
             RenderGround();
             RenderBackwall();
-            RenderRightwall();
+            RenderLeftwall();
         }
 
         void RenderGround()
@@ -97,10 +97,10 @@ namespace Sandbox
             mQuadBinding.Draw();
         }
 
-        void RenderRightwall()
+        void RenderLeftwall()
         {
-            var rotation = Matrix.RotateY(-Constants.HALF_PI);
-            var world = Matrix.CreateTranslation(new Vector3(2.5f, 1.5f, 0)) * Matrix.Scale(5) * rotation;
+            var rotation = Matrix.RotateY(Constants.HALF_PI);
+            var world = Matrix.CreateTranslation(new Vector3(-2.5f, 1.5f, 0)) * Matrix.Scale(5) * rotation;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotation);
 
