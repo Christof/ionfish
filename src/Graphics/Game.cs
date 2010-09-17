@@ -59,7 +59,8 @@ namespace Graphics
 
         public void Exit()
         {
-            Application.Exit();
+            Window.Close();
+            //Application.Exit();
         }
 
         public void Dispose()

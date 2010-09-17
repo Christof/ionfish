@@ -1,12 +1,28 @@
+using Graphics;
+
 namespace Sandbox
 {
     public class Program
     {
         static void Main()
         {
-            using (var game = new LightingDemo())
+            Game game = new AISandboxGame();
+            while (true)
             {
-                game.Run();
+                using (game)
+                {
+                    game.Run();
+                }
+
+                using (var demoSeleciton = new DemoSelection())
+                {
+                    demoSeleciton.ShowDialog();
+                    if (demoSeleciton.CloseAll)
+                    {
+                        return;
+                    }
+                    game = demoSeleciton.Game;
+                }
             }
         }
     }

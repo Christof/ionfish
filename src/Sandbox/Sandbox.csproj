@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +53,12 @@
   <ItemGroup>
     <Compile Include="AISandboxGame.cs" />
     <Compile Include="CameraCommandManager.cs" />
+    <Compile Include="DemoSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DemoSelection.Designer.cs">
+      <DependentUpon>DemoSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="LightingDemo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +89,11 @@
       <Project>{364AF331-5C72-4D93-9890-40010A656057}</Project>
       <Name>Math</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DemoSelection.resx">
+      <DependentUpon>DemoSelection.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

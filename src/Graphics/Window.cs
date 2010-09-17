@@ -184,7 +184,12 @@ namespace Graphics
 
         public void Run()
         {
-            Application.Run(mForm);
+            mForm.ShowDialog();
+        }
+
+        public void Close()
+        {
+            mForm.Close();
         }
 
         public bool IsClosing { get; private set; }
