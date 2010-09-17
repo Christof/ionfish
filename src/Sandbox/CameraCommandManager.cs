@@ -23,12 +23,12 @@ namespace Sandbox
         {
             var stand = camera.Stand;
 
-            commandManager.Add(MOVE_BACKWARD, () => stand.Position += Vector3.ZAxis * mFrameTime * mSpeedFactor);
-            commandManager.Add(MOVE_FORWARD, () => stand.Position -= Vector3.ZAxis * mFrameTime * mSpeedFactor);
-            commandManager.Add(STRAFE_RIGHT, () => stand.Position += Vector3.XAxis * mFrameTime * mSpeedFactor);
-            commandManager.Add(STRAFE_LEFT, () => stand.Position -= Vector3.XAxis * mFrameTime * mSpeedFactor);
-            commandManager.Add(UP, () => stand.Position += Vector3.YAxis * mFrameTime * mSpeedFactor);
-            commandManager.Add(DOWN, () => stand.Position -= Vector3.YAxis * mFrameTime * mSpeedFactor);
+            commandManager.Add(MOVE_FORWARD, () => stand.Position += stand.Direction * mFrameTime * mSpeedFactor);
+            commandManager.Add(MOVE_BACKWARD, () => stand.Position -= stand.Direction* mFrameTime * mSpeedFactor);
+            commandManager.Add(STRAFE_RIGHT, () => stand.Position += stand.Direction.Cross(stand.Up) * mFrameTime * mSpeedFactor);
+            commandManager.Add(STRAFE_LEFT, () => stand.Position -= stand.Direction.Cross(stand.Up) * mFrameTime * mSpeedFactor);
+            commandManager.Add(UP, () => stand.Position += stand.Up * mFrameTime * mSpeedFactor);
+            commandManager.Add(DOWN, () => stand.Position -= stand.Up* mFrameTime * mSpeedFactor);
             commandManager.Add(SPEEDFACTOR, () => mSpeedFactor = 20);
 
             inputCommandBinder.Bind(Button.LeftShift, SPEEDFACTOR);
