@@ -6,7 +6,7 @@ namespace Math.AI
         private readonly float mSlowRadius;
         private const float TIME_TO_TARGET = 0.1f;
 
-        public ArrivingSteering(Kinematic character, Kinematic target, float maxAcceleration, float slowRadius, float satisfactionRadius)
+        public ArrivingSteering(Kinematic character, IHasPosition target, float maxAcceleration, float slowRadius, float satisfactionRadius)
             : base(character, target, maxAcceleration)
         {
             mSatisfactionRadius = satisfactionRadius;

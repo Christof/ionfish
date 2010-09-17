@@ -2,7 +2,7 @@
 {
     public class RefugeeSteering : SteeringBase
     {
-        public RefugeeSteering(Kinematic character, Kinematic target, float maxAcceleration)
+        public RefugeeSteering(Kinematic character, IHasPosition target, float maxAcceleration)
             : base(character, target, maxAcceleration)
         {
         }

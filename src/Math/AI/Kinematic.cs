@@ -1,6 +1,6 @@
 ﻿namespace Math.AI
 {
-    public class Kinematic
+    public class Kinematic : IHasPosition
     {
         public Vector3 Velocity { get; private set; }
         public Vector3 Position { get; private set; }

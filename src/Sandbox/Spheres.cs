@@ -1,13 +1,20 @@
-﻿using Core.Commands;
+﻿using System;
+using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
 using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
+using Math.AI;
 
 namespace Sandbox
 {
+    public class Player : IHasPosition
+    {
+        public Vector3 Position { get; set; }
+    }
+
     public class Spheres : Game
     {
         private Keyboard mKeyboard;
@@ -17,6 +24,12 @@ namespace Sandbox
         private MeshMaterialBinding mSphereBinding;
         private MeshMaterialBinding mQuadBinding;
         private MeshMaterialBinding mCubeBinding;
+        private readonly Player mPlayer = new Player();
+        private readonly Kinematic mTargetKinematic = new Kinematic(new Vector3(-2, 0, -2), 0.2f);
+        private readonly Kinematic mEnemyKinematic = new Kinematic(new Vector3(2, 0, -2), 0.3f);
+        private RefugeeSteering mTargetSteering;
+        private ArrivingSteering mEnemySteering;
+        private Matrix mSphereCorrection;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -24,8 +37,6 @@ namespace Sandbox
         private const string MOVE_BACKWARD = "move backward";
         private const string STRAFE_LEFT = "strafe left";
         private const string STRAFE_RIGHT = "strafe right";
-        private const string UP = "up";
-        private const string DOWN = "down";
 
         protected override void Initialize()
         {
@@ -37,8 +48,8 @@ namespace Sandbox
             mKeyboard = new Keyboard();
 
             var stand = new Stand();
-            stand.Position = new Vector3(0, 2, 12);
-            stand.Direction = -stand.Position.Normalized();
+            stand.Position = new Vector3(0, 1, 4);
+            stand.Direction = (new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
             stand.Up = Vector3.XAxis.Cross(stand.Direction);
 
             var lens = new PerspectiveProjectionLens();
@@ -47,27 +58,57 @@ namespace Sandbox
             var commands = new CommandManager();
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
+            commands.Add(MOVE_FORWARD, () => mPlayer.Position += -Vector3.ZAxis * Frametime);
+            commands.Add(MOVE_BACKWARD, () => mPlayer.Position -= -Vector3.ZAxis * Frametime);
+            commands.Add(STRAFE_LEFT, () => mPlayer.Position += -Vector3.XAxis * Frametime);
+            commands.Add(STRAFE_RIGHT, () => mPlayer.Position -= -Vector3.XAxis * Frametime);
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
+            mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
+            mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
+            mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
+            mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
+
+            mEnemySteering = new ArrivingSteering(mEnemyKinematic, mPlayer, maxAcceleration: 0.7f, slowRadius: 4, satisfactionRadius: 2);
+            mTargetSteering = new RefugeeSteering(mTargetKinematic, mPlayer, 0.7f);
+            mSphereCorrection = Matrix.CreateTranslation(new Vector3(0, 0.1f, 0));
         }
 
         protected override void OnFrame()
         {
             mKeyboard.Update();
             mInputCommandBinder.Update();
+            var stand = mCamera.Stand;
+            stand.Position = mPlayer.Position + new Vector3(0, 1, 4);
+            stand.Direction = (mPlayer.Position + new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
+
+            mTargetKinematic.Update(mTargetSteering, 0.2f, Frametime);
+            mEnemyKinematic.Update(mEnemySteering, 0.3f, Frametime);
 
             RenderSphere();
             RenderCube();
+            RenderNpcs();
 
             RenderGround();
+        }
+
+        private void RenderNpcs()
+        {
+            var world = Matrix.CreateTranslation(mTargetKinematic.Position) * mSphereCorrection;
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mSphereBinding.Draw();
+
+            world = Matrix.CreateTranslation(mEnemyKinematic.Position) * mSphereCorrection;
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mSphereBinding.Draw();
         }
 
         void RenderGround()
         {
             var rotation = Matrix.RotateX(-Constants.HALF_PI);
-            var world = Matrix.CreateTranslation(new Vector3(0f, -1.5f, 0f)) * Matrix.Scale(50) * rotation;
+            var world = Matrix.Scale(50) * rotation;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotation);
 
@@ -77,7 +118,7 @@ namespace Sandbox
         void RenderSphere()
         {
             var rotateX = Matrix.RotateX(Gametime);
-            var world = rotateX;
+            var world = Matrix.CreateTranslation(mPlayer.Position) * mSphereCorrection * rotateX;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotateX);
 
@@ -87,7 +128,7 @@ namespace Sandbox
         void RenderCube()
         {
             var rotateX = Matrix.Identity;
-            var world = Matrix.CreateTranslation(new Vector3(1, 0, 2)) * rotateX;
+            var world = Matrix.CreateTranslation(new Vector3(1, 0, -2)) * rotateX;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotateX);
 

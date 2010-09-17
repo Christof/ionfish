@@ -4,9 +4,9 @@
     {
         protected Kinematic Character { get; set; }
         public float MaxAcceleration { get; private set; }
-        protected Kinematic Target { get; set; }
+        protected IHasPosition Target { get; set; }
 
-        protected SteeringBase(Kinematic character, Kinematic target, float maxAcceleration)
+        protected SteeringBase(Kinematic character, IHasPosition target, float maxAcceleration)
         {
             Character = character;
             Target = target;

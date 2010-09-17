@@ -2,8 +2,8 @@
 {
     public class SeekSteering : SteeringBase
     {
-        public SeekSteering(Kinematic character, Kinematic target, float maxAcceleration)
-            : base(character,target, maxAcceleration)
+        public SeekSteering(Kinematic character, IHasPosition target, float maxAcceleration)
+            : base(character, target, maxAcceleration)
         {
         }
 
