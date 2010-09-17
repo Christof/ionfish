@@ -6,7 +6,7 @@ namespace Sandbox
     {
         static void Main()
         {
-            Game game = new AISandboxGame();
+            Game game = new Spheres();
             while (true)
             {
                 using (game)
