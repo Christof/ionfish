@@ -37,13 +37,8 @@ namespace Sandbox
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                Die();
+                Close();
             }
-        }
-
-        private void Die()
-        {
-            Close();
         }
 
         private void SelectGame()
@@ -61,7 +56,7 @@ namespace Sandbox
 
         private void CloseButtonClick(object sender, EventArgs e)
         {
-            Die();
+            Close();
         }
     }
 }
