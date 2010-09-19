@@ -46,7 +46,7 @@ namespace Math
         /// <param name="min">Minimum float.</param>
         /// <param name="max">Maximum float.</param>
         /// <returns>Returns the Random value.</returns>
-        private float GetRandomFloat(float min, float max)
+        public float GetRandomFloat(float min, float max)
         {
             if (min > max)
             {

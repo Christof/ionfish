@@ -26,10 +26,10 @@ namespace Sandbox
         private MeshMaterialBinding mRedCubeBinding;
         private MeshMaterialBinding mBlueCubeBinding;
         private readonly Player mPlayer = new Player();
-        private const int TARGETS_COUNT = 4;
+        private const int TARGETS_COUNT = 5;
         private readonly Kinematic[] mTargetsKinematic = new Kinematic[TARGETS_COUNT];
         private RefugeeSteering[] mTargetsSteering = new RefugeeSteering[TARGETS_COUNT];
-        private const int ENEMYS_COUNT = 4;
+        private const int ENEMYS_COUNT = 100;
         private readonly Kinematic[] mEnemysKinematic = new Kinematic[ENEMYS_COUNT];
         private readonly ArrivingSteering[] mEnemysSteering = new ArrivingSteering[ENEMYS_COUNT];
         private Matrix mSphereCorrection;
@@ -49,15 +49,20 @@ namespace Sandbox
             mColorfulCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device));
             mRedCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device, new Vector4(0.8f, 0, 0, 0)));
             mBlueCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device, new Vector4(0, 0, 0.8f, 0)));
+            Vector3RandomGenerator randomGenerator = new Vector3RandomGenerator(0);
+            randomGenerator.Next();
 
-            mEnemysKinematic[0] = new Kinematic(new Vector3(2, 0, -2), 0.6f);
-            mEnemysKinematic[1] = new Kinematic(new Vector3(2, 0, 2), 0.7f);
-            mEnemysKinematic[2] = new Kinematic(new Vector3(1, 0, -1), 0.9f);
-            mEnemysKinematic[3] = new Kinematic(new Vector3(1, 0, 1), 0.5f);
-            mTargetsKinematic[0] = new Kinematic(new Vector3(-2, 0, -2), 0.5f);
-            mTargetsKinematic[1] = new Kinematic(new Vector3(-2, 0, 2), 0.6f);
-            mTargetsKinematic[2] = new Kinematic(new Vector3(-2, 0, -1), 0.7f);
-            mTargetsKinematic[3] = new Kinematic(new Vector3(-2, 0, 1), 0.8f);
+            for (int i = 0; i < ENEMYS_COUNT; i++)
+            {
+                mEnemysKinematic[i] = new Kinematic(initialPosition: new Vector3(randomGenerator.GetRandomFloat(1f, 5f), 0, randomGenerator.GetRandomFloat(-5f, 5f)),
+                    maxSpeed: randomGenerator.GetRandomFloat(0.5f, 0.9f));
+            }
+
+            for (int i = 0; i < TARGETS_COUNT; i++)
+            {
+                mTargetsKinematic[i] = new Kinematic(initialPosition: new Vector3(randomGenerator.GetRandomFloat(-2f, -1f), 0, randomGenerator.GetRandomFloat(-2f, 2f)),
+                    maxSpeed: randomGenerator.GetRandomFloat(0.5f, 0.9f));
+            }
 
             mKeyboard = new Keyboard();
 
