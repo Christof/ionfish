@@ -22,12 +22,16 @@ namespace Sandbox
         private Material mMaterial;
         private MeshMaterialBinding mSphereBinding;
         private MeshMaterialBinding mQuadBinding;
-        private MeshMaterialBinding mCubeBinding;
+        private MeshMaterialBinding mColorfulCubeBinding;
+        private MeshMaterialBinding mRedCubeBinding;
+        private MeshMaterialBinding mBlueCubeBinding;
         private readonly Player mPlayer = new Player();
-        private readonly Kinematic mTargetKinematic = new Kinematic(new Vector3(-2, 0, -2), 0.2f);
-        private readonly Kinematic mEnemyKinematic = new Kinematic(new Vector3(2, 0, -2), 0.3f);
-        private RefugeeSteering mTargetSteering;
-        private ArrivingSteering mEnemySteering;
+        private const int TARGETS_COUNT = 4;
+        private readonly Kinematic[] mTargetsKinematic = new Kinematic[TARGETS_COUNT];
+        private RefugeeSteering[] mTargetsSteering = new RefugeeSteering[TARGETS_COUNT];
+        private const int ENEMYS_COUNT = 4;
+        private readonly Kinematic[] mEnemysKinematic = new Kinematic[ENEMYS_COUNT];
+        private readonly ArrivingSteering[] mEnemysSteering = new ArrivingSteering[ENEMYS_COUNT];
         private Matrix mSphereCorrection;
 
         private const string ESCAPE = "escape";
@@ -42,7 +46,18 @@ namespace Sandbox
             mMaterial = new Material("lighting.fx", Window.Device);
             mSphereBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Sphere(Window.Device, radius: 0.1f));
             mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.6f, 0.6f, 0.6f, 0)));
-            mCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device));
+            mColorfulCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device));
+            mRedCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device, new Vector4(0.8f, 0, 0, 0)));
+            mBlueCubeBinding = new MeshMaterialBinding(Window.Device, mMaterial, new CubeWithNormals(Window.Device, new Vector4(0, 0, 0.8f, 0)));
+
+            mEnemysKinematic[0] = new Kinematic(new Vector3(2, 0, -2), 0.6f);
+            mEnemysKinematic[1] = new Kinematic(new Vector3(2, 0, 2), 0.7f);
+            mEnemysKinematic[2] = new Kinematic(new Vector3(1, 0, -1), 0.9f);
+            mEnemysKinematic[3] = new Kinematic(new Vector3(1, 0, 1), 0.5f);
+            mTargetsKinematic[0] = new Kinematic(new Vector3(-2, 0, -2), 0.5f);
+            mTargetsKinematic[1] = new Kinematic(new Vector3(-2, 0, 2), 0.6f);
+            mTargetsKinematic[2] = new Kinematic(new Vector3(-2, 0, -1), 0.7f);
+            mTargetsKinematic[3] = new Kinematic(new Vector3(-2, 0, 1), 0.8f);
 
             mKeyboard = new Keyboard();
 
@@ -70,9 +85,17 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
 
-            mEnemySteering = new ArrivingSteering(mEnemyKinematic, mPlayer, maxAcceleration: 0.7f, slowRadius: 0.8f, satisfactionRadius: 0.2f);
-            mTargetSteering = new RefugeeSteering(mTargetKinematic, mPlayer, 0.7f);
             mSphereCorrection = Matrix.CreateTranslation(new Vector3(0, 0.1f, 0));
+
+            for (int i = 0; i < TARGETS_COUNT; i++)
+            {
+                mTargetsSteering[i] = new RefugeeSteering(mTargetsKinematic[i], mPlayer, 0.7f);
+            }
+
+            for (int i = 0; i < ENEMYS_COUNT; i++)
+            {
+                mEnemysSteering[i] = new ArrivingSteering(mEnemysKinematic[i], mPlayer, maxAcceleration: 0.7f, slowRadius: 0.8f, satisfactionRadius: 0.2f);
+            }
         }
 
         protected override void OnFrame()
@@ -83,8 +106,15 @@ namespace Sandbox
             stand.Position = mPlayer.Position + new Vector3(0, 1, 4);
             stand.Direction = (mPlayer.Position + new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
 
-            mTargetKinematic.Update(mTargetSteering, Frametime);
-            mEnemyKinematic.Update(mEnemySteering, Frametime);
+            for (int i = 0; i < TARGETS_COUNT; i++)
+            {
+                mTargetsKinematic[i].Update(mTargetsSteering[i], Frametime);
+            }
+
+            for (int i = 0; i < ENEMYS_COUNT; i++)
+            {
+                mEnemysKinematic[i].Update(mEnemysSteering[i], Frametime);
+            }
 
             RenderSphere();
             RenderCube();
@@ -95,13 +125,30 @@ namespace Sandbox
 
         private void RenderNpcs()
         {
-            var world = Matrix.CreateTranslation(mTargetKinematic.Position) * mSphereCorrection;
-            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
-            mSphereBinding.Draw();
+            for (int i = 0; i < TARGETS_COUNT; i++)
+            {
+                DrawTarget(mTargetsKinematic[i]);
+            }
 
-            world = Matrix.CreateTranslation(mEnemyKinematic.Position) * mSphereCorrection;
+            for (int i = 0; i < ENEMYS_COUNT; i++)
+            {
+                DrawEnemy(mEnemysKinematic[i]);
+            }
+       }
+
+        void DrawTarget(Kinematic target)
+        {
+            var world = Matrix.CreateTranslation(target.Position) * Matrix.CreateTranslation(new Vector3(0, 0.1f, 0)) * Matrix.Scale(0.2f);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
-            mSphereBinding.Draw();
+            mBlueCubeBinding.Draw();
+        }
+
+        void DrawEnemy(Kinematic enemy)
+        {
+            Matrix world;
+            world = Matrix.CreateTranslation(enemy.Position) * Matrix.CreateTranslation(new Vector3(0, 0.1f, 0)) * Matrix.Scale(0.2f);
+            mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
+            mRedCubeBinding.Draw();
         }
 
         void RenderGround()
@@ -131,7 +178,7 @@ namespace Sandbox
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
             mMaterial.SetWorld(rotateX);
 
-            mCubeBinding.Draw();
+            mColorfulCubeBinding.Draw();
         }
     }
 }
