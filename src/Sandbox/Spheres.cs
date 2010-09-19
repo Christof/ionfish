@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Commands;
+﻿using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
 using Graphics.Materials;
@@ -71,7 +70,7 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
             mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
 
-            mEnemySteering = new ArrivingSteering(mEnemyKinematic, mPlayer, maxAcceleration: 0.7f, slowRadius: 4, satisfactionRadius: 2);
+            mEnemySteering = new ArrivingSteering(mEnemyKinematic, mPlayer, maxAcceleration: 0.7f, slowRadius: 0.8f, satisfactionRadius: 0.2f);
             mTargetSteering = new RefugeeSteering(mTargetKinematic, mPlayer, 0.7f);
             mSphereCorrection = Matrix.CreateTranslation(new Vector3(0, 0.1f, 0));
         }
@@ -84,8 +83,8 @@ namespace Sandbox
             stand.Position = mPlayer.Position + new Vector3(0, 1, 4);
             stand.Direction = (mPlayer.Position + new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
 
-            mTargetKinematic.Update(mTargetSteering, 0.2f, Frametime);
-            mEnemyKinematic.Update(mEnemySteering, 0.3f, Frametime);
+            mTargetKinematic.Update(mTargetSteering, Frametime);
+            mEnemyKinematic.Update(mEnemySteering, Frametime);
 
             RenderSphere();
             RenderCube();

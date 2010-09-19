@@ -18,16 +18,15 @@
         {
         }
 
-        public void Update(ISteering steering, float maxSpeed, float frametime)
+        public void Update(ISteering steering, float frametime)
         {
-            MaxSpeed = maxSpeed;
             Position += Velocity * frametime;
 
             Velocity += steering.GetLinearAcceleration() * frametime;
 
-            if (Velocity.Length > maxSpeed)
+            if (Velocity.Length > MaxSpeed)
             {
-                Velocity = Velocity.Normalized() * maxSpeed;
+                Velocity = Velocity.Normalized() * MaxSpeed;
             }
         }
     }

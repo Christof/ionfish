@@ -69,9 +69,9 @@ namespace Sandbox
             mKeyboard.Update();
             mInputCommandBinder.Update();
             
-            mSeekerKinematic.Update(mSeekSteering, 10, Frametime);
-            mRefugeeKinematic.Update(mRefugeeSteering, 7, Frametime);
-            mArriveKinematic.Update(mArriveSteering, 10, Frametime);
+            mSeekerKinematic.Update(mSeekSteering, Frametime);
+            mRefugeeKinematic.Update(mRefugeeSteering, Frametime);
+            mArriveKinematic.Update(mArriveSteering, Frametime);
 
             var world = Matrix.CreateTranslation(mSeekerKinematic.Position);
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
