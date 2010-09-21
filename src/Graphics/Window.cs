@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Core.Helper;
 using SlimDX;
 using SlimDX.Direct3D10;
 using SlimDX.DXGI;
@@ -18,6 +19,7 @@ namespace Graphics
         private DepthStencilView mDepthStencilView;
         private DepthStencilState mDepthStencilState;
         private bool mTakeScreenshotInCurrentFrame;
+        private readonly PicasaImageUploader mUploader;
         public Device Device { get; private set; }
 
         public Window(int width = 1600, int height = 900)
@@ -25,6 +27,7 @@ namespace Graphics
             mWidth = width;
             mHeight = height;
             InitializeDevice();
+            mUploader = new PicasaImageUploader();
         }
 
         public void InitializeDevice()
@@ -169,10 +172,13 @@ namespace Graphics
                 return;
             }
 
+            var filename = string.Format("Screenshot_{0:yyyy}_{0:MM}_{0:dd}_{0:HH}_{0:mm}_{0:ss}.png", DateTime.Now);
             using (var texture = Resource.FromSwapChain<Texture2D>(mSwapChain, 0))
             {
-                Texture2D.ToFile(texture, ImageFileFormat.Png, string.Format("Screenshot_{0:yyyy}_{0:MM}_{0:dd}_{0:HH}_{0:mm}_{0:ss}.png", DateTime.Now));
+                Texture2D.ToFile(texture, ImageFileFormat.Png, filename);
             }
+
+            mUploader.UploadImage(filename);
 
             mTakeScreenshotInCurrentFrame = false;
         }

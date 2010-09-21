@@ -47,6 +47,8 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandManager.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
+    <Compile Include="Helper\PicasaImageUploader.cs" />
+    <Compile Include="Helper\Serializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
