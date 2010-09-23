@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AISandboxGame.cs" />
     <Compile Include="CameraCommandManager.cs" />
+    <Compile Include="TextureDemo.cs" />
     <Compile Include="Spheres.cs" />
     <Compile Include="DemoSelection.cs">
       <SubType>Form</SubType>
@@ -66,6 +67,9 @@
     <Compile Include="SandboxGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="texture.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="lighting.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -95,6 +99,11 @@
     <EmbeddedResource Include="DemoSelection.resx">
       <DependentUpon>DemoSelection.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

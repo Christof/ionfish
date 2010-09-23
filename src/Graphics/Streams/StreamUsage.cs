@@ -4,6 +4,7 @@ namespace Graphics.Streams
     {
         Position,
         Color,
-        Normal
+        Normal,
+        TextureCoordinates0
     }
 }

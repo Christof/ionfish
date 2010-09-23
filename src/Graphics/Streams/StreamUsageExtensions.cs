@@ -14,6 +14,8 @@ namespace Graphics.Streams
                     return "COLOR";
                 case StreamUsage.Normal:
                     return "NORMAL";
+                case StreamUsage.TextureCoordinates0:
+                    return "TEXCOORD";
                 default:
                     throw new ArgumentException();
             }

@@ -78,7 +78,7 @@ namespace Graphics
                 IsDepthClipEnabled = true,
                 IsScissorEnabled = false,
                 IsMultisampleEnabled = false,
-                IsAntialiasedLineEnabled = true
+                IsAntialiasedLineEnabled = true,
             };
 
             Device.Rasterizer.State = RasterizerState.FromDescription(Device, rasterizerState);
