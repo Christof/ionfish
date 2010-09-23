@@ -43,8 +43,10 @@ namespace Graphics.Materials
 
         public void SetTexture(Texture2D texture)
         {
-            mEffect.GetVariableByName("Texture").AsResource().SetResource(
-                new ShaderResourceView(mDevice, texture));
+            using (var shaderResourceView = new ShaderResourceView(mDevice, texture))
+            {
+                mEffect.GetVariableByName("Texture").AsResource().SetResource(shaderResourceView);
+            }
         }
     }
 }

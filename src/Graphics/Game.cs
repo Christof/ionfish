@@ -63,7 +63,7 @@ namespace Graphics
             //Application.Exit();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Window.Dispose();
         }

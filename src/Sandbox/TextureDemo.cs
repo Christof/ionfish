@@ -79,5 +79,11 @@ namespace Sandbox
 
             mQuadBinding.Draw();
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            mTexture.Dispose();
+        }       
     }
 }
