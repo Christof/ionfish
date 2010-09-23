@@ -5,7 +5,6 @@ using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
-using SlimDX.Direct3D10;
 
 namespace Sandbox
 {
@@ -16,7 +15,7 @@ namespace Sandbox
         private Camera mCamera;
         private Material mMaterial;
         private MeshMaterialBinding mQuadBinding;
-        private Texture2D mTexture;
+        private Texture mTexture;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -31,7 +30,7 @@ namespace Sandbox
         {
             mMaterial = new Material("texture.fx", Window.Device);
             mQuadBinding = new MeshMaterialBinding(Window.Device, mMaterial, new Quad(Window.Device, new Vector4(0.6f, 0.6f, 0.6f, 0)));
-            mTexture = Texture2D.FromFile(Window.Device, "texture.png");
+            mTexture = new Texture(Window.Device, "texture.png");
 
             mKeyboard = new Keyboard();
 
@@ -74,7 +73,6 @@ namespace Sandbox
         {
             var world = Matrix.Identity;
             mMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * world);
-            //mMaterial.SetWorld(Matrix.Identity);
             mMaterial.SetTexture(mTexture);
 
             mQuadBinding.Draw();

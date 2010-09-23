@@ -41,12 +41,9 @@ namespace Graphics.Materials
                 .AsMatrix().SetMatrix(worldMatrix.ToSlimDX());
         }
 
-        public void SetTexture(Texture2D texture)
+        public void SetTexture(Texture texture)
         {
-            using (var shaderResourceView = new ShaderResourceView(mDevice, texture))
-            {
-                mEffect.GetVariableByName("Texture").AsResource().SetResource(shaderResourceView);
-            }
+            mEffect.GetVariableByName("Texture").AsResource().SetResource(texture.ShaderResourceView);
         }
     }
 }
