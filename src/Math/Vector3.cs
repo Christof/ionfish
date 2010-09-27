@@ -33,7 +33,12 @@ namespace Math
 
         public float Length
         {
-            get { return (float) System.Math.Sqrt(mX * mX + mY * mY + mZ * mZ); }
+            get { return (float) System.Math.Sqrt(LengthSquared); }
+        }
+
+        public float LengthSquared
+        {
+            get { return mX * mX + mY * mY + mZ * mZ; }
         }
 
         public static Vector3 XAxis

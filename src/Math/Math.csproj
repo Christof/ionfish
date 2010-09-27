@@ -48,6 +48,7 @@
     <Compile Include="AI\RefugeeSteering.cs" />
     <Compile Include="AI\SeekSteering.cs" />
     <Compile Include="AI\SteeringBase.cs" />
+    <Compile Include="Collision\BoundingSphere.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="IHasPosition.cs" />
