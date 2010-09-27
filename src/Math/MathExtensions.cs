@@ -62,5 +62,10 @@ namespace Math
 
             return value;
         }
+
+        public static float From01ToCustomRange(this float value, float rangeStart, float rangeEnd)
+        {
+            return value * (rangeEnd - rangeStart) + rangeStart;
+        }
     }
 }

@@ -46,14 +46,14 @@ namespace Math
         /// <param name="min">Minimum float.</param>
         /// <param name="max">Maximum float.</param>
         /// <returns>Returns the Random value.</returns>
-        public float GetRandomFloat(float min, float max)
+        private float GetRandomFloat(float min, float max)
         {
             if (min > max)
             {
                 throw new ArgumentOutOfRangeException("min", "Min value is higher than max value");
             }
 
-            return (((float)mRandom.NextDouble() * (max - min)) + min);
+            return ((float)mRandom.NextDouble()).From01ToCustomRange(min, max);
         }
     }
 }
