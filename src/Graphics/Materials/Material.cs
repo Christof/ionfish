@@ -7,10 +7,12 @@ namespace Graphics.Materials
 {
     public class Material
     {
-        private Effect mEffect;
+        private readonly Device mDevice;
+        private readonly Effect mEffect;
 
         public Material(string fileName, Device device)
         {
+            mDevice = device;
             string errors;
             mEffect = Effect.FromFile(device, fileName, "fx_4_0",
                 ShaderFlags.Debug, EffectFlags.None, null, null, out errors);
@@ -37,6 +39,11 @@ namespace Graphics.Materials
         {
             mEffect.GetVariableBySemantic("World")
                 .AsMatrix().SetMatrix(worldMatrix.ToSlimDX());
+        }
+
+        public void SetTexture(Texture texture)
+        {
+            mEffect.GetVariableByName("Texture").AsResource().SetResource(texture.ShaderResourceView);
         }
     }
 }

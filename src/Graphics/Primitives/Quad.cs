@@ -14,6 +14,7 @@ namespace Graphics.Primitives
             CreateVertexStream(StreamUsage.Position, CreatePositions());
             CreateVertexStream(StreamUsage.Color, ArrayHelper.Create(4, color));
             CreateVertexStream(StreamUsage.Normal, CreateNormals());
+            CreateVertexStream(StreamUsage.TextureCoordinates0, CreateTextureCoordinates());
             CreateIndexStream(CreateIndices());
         }
 
@@ -23,6 +24,7 @@ namespace Graphics.Primitives
             CreateVertexStream(StreamUsage.Position, CreatePositions());
             CreateVertexStream(StreamUsage.Color, CreateColors());
             CreateVertexStream(StreamUsage.Normal, CreateNormals());
+            CreateVertexStream(StreamUsage.TextureCoordinates0, CreateTextureCoordinates());
             CreateIndexStream(CreateIndices());
         }
 
@@ -49,6 +51,16 @@ namespace Graphics.Primitives
         private static Vector3[] CreateNormals()
         {
             return ArrayHelper.Create(4, Vector3.ZAxis);
+        }
+
+        private static Vector2[] CreateTextureCoordinates()
+        {
+            var bottomLeft = new Vector2(0, 1);
+            var topLeft = new Vector2(0, 0);
+            var bottomRight = new Vector2(1, 1);
+            var topRight = new Vector2(1, 0);
+
+            return new[] { bottomLeft, topLeft, bottomRight, topRight };
         }
 
         private static uint[] CreateIndices()

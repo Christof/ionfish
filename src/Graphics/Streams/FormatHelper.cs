@@ -10,6 +10,8 @@ namespace Graphics.Streams
             var typeName = typeof(T).Name;
             switch (typeName)
             {
+                case "Vector2":
+                    return Format.R32G32_Float;
                 case "Vector3":
                     return Format.R32G32B32_Float;
                 case "Vector4":

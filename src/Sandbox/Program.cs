@@ -6,7 +6,7 @@ namespace Sandbox
     {
         static void Main()
         {
-            Game game = new Spheres();
+            Game game = new TextureDemo();
             while (true)
             {
                 using (game)
