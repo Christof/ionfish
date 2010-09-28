@@ -50,6 +50,7 @@
     <Compile Include="Specs_Functions.cs" />
     <Compile Include="Spec_MathExtensions.cs" />
     <Compile Include="Spec_Matrix.cs" />
+    <Compile Include="Spec_Quaternion.cs" />
     <Compile Include="Spec_Vector2.cs" />
     <Compile Include="Spec_Vector3.cs" />
     <Compile Include="Spec_Vector3RandomGenerator.cs" />
