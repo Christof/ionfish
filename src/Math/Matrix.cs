@@ -273,6 +273,14 @@ namespace Math
                 matrix.R4C1 * columnVector.X + matrix.R4C2 * columnVector.Y + matrix.R4C3 * columnVector.Z + matrix.R4C4 * columnVector.W);
         }
 
+        public static Vector3 operator *(Matrix matrix, Vector3 columnVector)
+        {
+            return new Vector3(
+                matrix.R1C1 * columnVector.X + matrix.R1C2 * columnVector.Y + matrix.R1C3 * columnVector.Z + matrix.R1C4,
+                matrix.R2C1 * columnVector.X + matrix.R2C2 * columnVector.Y + matrix.R2C3 * columnVector.Z + matrix.R2C4,
+                matrix.R3C1 * columnVector.X + matrix.R3C2 * columnVector.Y + matrix.R3C3 * columnVector.Z + matrix.R3C4);
+        }
+
         public static Matrix CreateTranslation(Vector3 position)
         {
             return new Matrix(
