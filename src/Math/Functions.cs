@@ -26,5 +26,10 @@ namespace Math
         {
             return ((float)sRandomGenerator.NextDouble()).From01ToCustomRange(min, max);
         }
+
+        public static float Sqrt(float value)
+        {
+            return (float) System.Math.Sqrt(value);
+        }
     }
 }

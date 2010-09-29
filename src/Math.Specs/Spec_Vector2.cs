@@ -106,7 +106,7 @@ namespace Math
 
             Because of = () => result = vector.Length;
 
-            It should_return_the_length = () => result.ShouldEqual((float)System.Math.Sqrt(1 * 1 + 2 * 2));
+            It should_return_the_length = () => result.ShouldEqual(Functions.Sqrt(1 * 1 + 2 * 2));
         }
 
         [Subject(typeof(Vector2))]

@@ -26,7 +26,7 @@ namespace Math
 
         public float Length
         {
-            get { return (float)System.Math.Sqrt(mX * mX + mY * mY); }
+            get { return Functions.Sqrt(mX * mX + mY * mY); }
         }
 
         public static Vector2 XAxis

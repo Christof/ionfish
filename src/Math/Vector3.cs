@@ -33,7 +33,7 @@ namespace Math
 
         public float Length
         {
-            get { return (float) System.Math.Sqrt(LengthSquared); }
+            get { return Functions.Sqrt(LengthSquared); }
         }
 
         public float LengthSquared

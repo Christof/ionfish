@@ -41,7 +41,7 @@ namespace Math
 
         public float Length
         {
-            get { return (float)System.Math.Sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW); }
+            get { return Functions.Sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW); }
         }
 
         public static Vector4 XAxis
