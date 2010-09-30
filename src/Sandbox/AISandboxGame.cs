@@ -56,7 +56,7 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.Escape, ESCAPE);
             mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
+            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, stand);
 
             mSeekSteering = new SeekSteering(mSeekerKinematic, mRefugeeKinematic, 15);
             mArriveSteering = new ArrivingSteering(mArriveKinematic, mRefugeeKinematic, maxAcceleration: 15, slowRadius: 4, satisfactionRadius: 2);

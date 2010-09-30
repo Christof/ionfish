@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cameras\Spec_Camera.cs" />
+    <Compile Include="Cameras\Spec_OrbitingStand.cs" />
     <Compile Include="Cameras\Spec_PerspectiveProjectionLens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spec_SlimDXExtensions.cs" />

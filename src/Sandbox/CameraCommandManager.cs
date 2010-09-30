@@ -19,10 +19,8 @@ namespace Sandbox
 
         private float mFrameTime;
 
-        public CameraCommandManager(ICommandManager commandManager, InputCommandBinder inputCommandBinder, ICamera camera)
+        public CameraCommandManager(ICommandManager commandManager, InputCommandBinder inputCommandBinder, Stand stand)
         {
-            var stand = camera.Stand;
-
             commandManager.Add(MOVE_FORWARD, () => stand.Position += stand.Direction * mFrameTime * mSpeedFactor);
             commandManager.Add(MOVE_BACKWARD, () => stand.Position -= stand.Direction* mFrameTime * mSpeedFactor);
             commandManager.Add(STRAFE_RIGHT, () => stand.Position += stand.Direction.Cross(stand.Up) * mFrameTime * mSpeedFactor);

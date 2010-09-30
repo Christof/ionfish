@@ -8,22 +8,22 @@ namespace Graphics.Cameras
     public interface IStand
     {
         /// <summary>
-        /// Gets or sets the position.
+        /// Gets the position.
         /// </summary>
         /// <value>The position.</value>
-        Vector3 Position { get; set; }
+        Vector3 Position { get; }
 
         /// <summary>
-        /// Gets or sets the direction.
+        /// Gets the direction.
         /// </summary>
         /// <value>The direction.</value>
-        Vector3 Direction { get; set; }
+        Vector3 Direction { get; }
 
         /// <summary>
-        /// Gets or sets a vector point upwards.
+        /// Gets a vector point upwards.
         /// </summary>
         /// <value>The up vector.</value>
-        Vector3 Up { get; set; }
+        Vector3 Up { get; }
 
         /// <summary>
         /// Gets the view matrix.

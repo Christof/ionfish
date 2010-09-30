@@ -72,7 +72,7 @@ namespace Sandbox
             mInputCommandBinder.Bind(Button.U, ROLL_LEFT);
             mInputCommandBinder.Bind(Button.O, ROLL_RIGHT);
             
-            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, mCamera);
+            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, stand);
 
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
             mCubePositions = new[]

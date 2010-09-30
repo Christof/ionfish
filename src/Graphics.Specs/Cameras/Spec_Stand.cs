@@ -1,8 +1,7 @@
-using Graphics.Cameras;
 using Machine.Specifications;
 using Math;
 
-namespace Graphics
+namespace Graphics.Cameras
 {
     public class Spec_Stand
     {

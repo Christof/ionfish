@@ -33,6 +33,7 @@ namespace Sandbox
         private readonly Kinematic[] mEnemysKinematic = new Kinematic[ENEMYS_COUNT];
         private readonly ArrivingSteering[] mEnemysSteering = new ArrivingSteering[ENEMYS_COUNT];
         private Matrix mSphereCorrection;
+        private Stand mStand;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -69,13 +70,13 @@ namespace Sandbox
 
             mKeyboard = new Keyboard();
 
-            var stand = new Stand();
-            stand.Position = new Vector3(0, 1, 4);
-            stand.Direction = (new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
-            stand.Up = Vector3.XAxis.Cross(stand.Direction);
+            mStand = new Stand();
+            mStand.Position = new Vector3(0, 1, 4);
+            mStand.Direction = (new Vector3(0, 0.5f, 0) - mStand.Position).Normalized();
+            mStand.Up = Vector3.XAxis.Cross(mStand.Direction);
 
             var lens = new PerspectiveProjectionLens();
-            mCamera = new Camera(stand, lens);
+            mCamera = new Camera(mStand, lens);
 
             var commands = new CommandManager();
             commands.Add(ESCAPE, Exit);
@@ -110,9 +111,8 @@ namespace Sandbox
         {
             mKeyboard.Update();
             mInputCommandBinder.Update();
-            var stand = mCamera.Stand;
-            stand.Position = mPlayer.Position + new Vector3(0, 1, 4);
-            stand.Direction = (mPlayer.Position + new Vector3(0, 0.5f, 0) - stand.Position).Normalized();
+            mStand.Position = mPlayer.Position + new Vector3(0, 1, 4);
+            mStand.Direction = (mPlayer.Position + new Vector3(0, 0.5f, 0) - mStand.Position).Normalized();
 
             for (int i = 0; i < TARGETS_COUNT; i++)
             {

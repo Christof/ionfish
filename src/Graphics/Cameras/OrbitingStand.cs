@@ -60,10 +60,6 @@ namespace Graphics.Cameras
                     Functions.Sin(Declination),
                     Functions.Sin(Azimuth) * Functions.Cos(Declination)) * Radius;
             }
-            set
-            {
-                throw new NotSupportedException();
-            }
         }
 
         /// <summary>
@@ -73,7 +69,6 @@ namespace Graphics.Cameras
         public Vector3 Direction
         {
             get { return -Position.Normalized(); }
-            set { throw new NotSupportedException(); }
         }
 
         /// <summary>
@@ -83,7 +78,6 @@ namespace Graphics.Cameras
         public Vector3 Up
         {
             get { return Vector3.YAxis; }
-            set { throw new NotSupportedException(); }
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace Graphics.Cameras
             get
             {
                 var position = Position;
-                return Stand.CalculateViewMatrix(position, -position, Vector3.YAxis);
+                return Stand.CalculateViewMatrix(position, -position, Up);
             }
         }
 
