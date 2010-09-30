@@ -3,7 +3,7 @@ require 'albacore'
 
 desc "Build the solution"
 msbuild do |msb|
-	msb.solution = "solution.sln"
+	msb.solution = "ionfish.sln"
 end
 
 desc "Runs specs"
