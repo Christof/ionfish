@@ -124,22 +124,37 @@ namespace Math
         [Subject(typeof (Matrix))]
         public class multiplication_matrix_and_vector4
         {
-            private static Vector4 resultVector;
-            private static Vector4 vector = new Vector4(1,2,3,4);
+            static Vector4 resultVector;
+            static readonly Vector4 vector = new Vector4(1, 2, 3, 4);
             static Matrix matrix = new Matrix(
                 11, 12, 13, 14,
                 21, 22, 23, 24,
                 31, 32, 33, 34,
                 41, 42, 43, 44);
 
-            private Because of = () => resultVector = matrix * vector;
+            Because of = () => resultVector = matrix * vector;
 
-            private It should_calculate_the_new_vector = () => resultVector.ShouldEqual(
+            It should_calculate_the_new_vector = () => resultVector.ShouldEqual(
                 new Vector4(
                     11 * 1 + 12 * 2 + 13 * 3 + 14 * 4,
                     21 * 1 + 22 * 2 + 23 * 3 + 24 * 4,
                     31 * 1 + 32 * 2 + 33 * 3 + 34 * 4,  
                     41 * 1 + 42 * 2 + 43 * 3 + 44 * 4));
+        }
+
+        [Subject(typeof(Matrix))]
+        public class multiplication_matrix_and_vector3
+        {
+            static Vector3 resultVector;
+            static Vector3 vector = new Vector3(1, 0, 0);
+
+            static Matrix matrix = Matrix.RotateY(Constants.HALF_PI) *
+                Matrix.CreateTranslation(new Vector3(2, 1, 0));
+
+            Because of = () => resultVector = matrix * vector;
+
+            It should_calculate_the_new_vector = () => resultVector.ShouldEqual(
+                new Vector3(0, 1, -3));
         }
 
         [Subject(typeof (Matrix))]
