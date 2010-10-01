@@ -1,8 +1,20 @@
 require 'rubygems'
 require 'albacore'
+require 'pathname'
+
+desc "Remove any build artifacts."
+task :clean do
+	rm_r "bin"
+end
 
 desc "Build the solution"
 msbuild do |msb|
+	msb.solution = "ionfish.sln"
+end
+
+desc "Release build"
+msbuild :build_release do |msb|
+	msb.properties :configuration => :Release
 	msb.solution = "ionfish.sln"
 end
 
@@ -24,3 +36,27 @@ end
 def gem(name, version)
 	sh "nu install #{name} --version #{version}"
 end
+
+directory "artifacts"
+
+desc "Copies all artifacts into an artifacts folder"
+task :copy_artifacts => "artifacts" do
+	artifacts = FileList["bin/*.exe", "bin/*.dll", "bin/*.fx", "bin/*.png"]
+
+	artifacts.exclude("bin/*Specs.dll", "bin/Machine.Specifications.dll", "Moq.dll")
+	artifacts.each do |file|
+		destination = Pathname.new("artifacts") + Pathname.new(File.basename(file))
+		cp(file, destination, :verbose => true)
+	end
+end
+
+desc "Puts the content of the bin folder in a zip file."
+zip do |zip|
+	zip.directories_to_zip "artifacts"
+	zip.output_file = "ionfish.zip"
+	zip.output_path = File.dirname(__FILE__)
+end
+
+desc "Creates a release"
+task :release => [:clean, :build_release, :copy_artifacts, :zip]
+

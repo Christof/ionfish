@@ -21,3 +21,4 @@ NDependOut
 /lib
 /lib/*
 *.zip
+/artifacts
