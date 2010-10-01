@@ -20,3 +20,4 @@ NDependOut
 *.swp
 /lib
 /lib/*
+*.zip
