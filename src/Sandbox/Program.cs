@@ -1,4 +1,6 @@
+using System;
 using Graphics;
+using System.IO;
 
 namespace Sandbox
 {
@@ -6,23 +8,35 @@ namespace Sandbox
     {
         static void Main()
         {
-            Game game = new TextureDemo();
-            while (true)
+            try
             {
-                using (game)
+                Game game = new SandboxGame();
+                while (true)
                 {
-                    game.Run();
-                }
-
-                using (var demoSeleciton = new DemoSelection())
-                {
-                    demoSeleciton.ShowDialog();
-                    if (demoSeleciton.CloseAll)
+                    using (game)
                     {
-                        return;
+                        game.Run();
                     }
-                    game = demoSeleciton.Game;
+
+                    using (var demoSeleciton = new DemoSelection())
+                    {
+                        demoSeleciton.ShowDialog();
+                        if (demoSeleciton.CloseAll)
+                        {
+                            return;
+                        }
+                        game = demoSeleciton.Game;
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                using (var writer = new StreamWriter("ionfish.log"))
+                {
+                    writer.Write(exception.Message);
+                    writer.Write(exception.StackTrace);
+                }
+                throw;
             }
         }
     }
