@@ -8,7 +8,7 @@ task :clean do
 end
 
 desc "Build the solution"
-msbuild do |msb|
+msbuild :build do |msb|
 	msb.solution = "ionfish.sln"
 end
 
@@ -18,7 +18,7 @@ msbuild :build_release do |msb|
 	msb.solution = "ionfish.sln"
 end
 
-desc "Runs specs"
+desc "Run specs"
 mspec do |mspec|
 	mspec.command = "lib/machine.specifications/net40/mspec.exe"
 	mspec.assemblies Dir["bin/*.Specs.dll"]
@@ -26,7 +26,7 @@ mspec do |mspec|
 end
 
 desc "Build the solution and run the specs"
-task :default => [:msbuild, :mspec]
+task :default => [:build, :mspec]
 
 desc "Installs all dependencies using nu"
 task :nu do
