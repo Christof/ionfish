@@ -67,6 +67,9 @@
     <Compile Include="SandboxGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="normal_as_color.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="texture.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
