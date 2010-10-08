@@ -4,7 +4,7 @@ require 'pathname'
 
 desc "Remove any build artifacts."
 task :clean do
-	rm_r "bin"
+	rm_r "bin" if File.directory?("bin")
 end
 
 desc "Build the solution"
