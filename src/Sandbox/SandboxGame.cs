@@ -1,21 +1,10 @@
-﻿using System.Drawing;
-using Core.Commands;
+﻿using Core.Commands;
 using Graphics;
 using Graphics.Cameras;
 using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
-using SlimDX;
-using SlimDX.Direct2D;
-using SlimDX.DirectWrite;
-using Factory = SlimDX.DirectWrite.Factory;
-using FactoryType = SlimDX.DirectWrite.FactoryType;
-using FontStyle = SlimDX.DirectWrite.FontStyle;
-using Matrix = Math.Matrix;
-using Triangle = Graphics.Primitives.Triangle;
-using Vector3 = Math.Vector3;
-using SlimDX.DXGI;
 
 namespace Sandbox
 {
@@ -35,9 +24,6 @@ namespace Sandbox
         private Vector3[] mTrianglePositions;
         private Vector3[] mQuadPositions;
         private CameraCommandManager mCameraCommandManager;
-        private WindowRenderTarget mWindowRenderTarget;
-        private TextFormat mTextFormat;
-        private SolidColorBrush mBrush;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
@@ -111,28 +97,6 @@ namespace Sandbox
                 mVector3Random.Next(),
                 mVector3Random.Next()
             };
-
-            var factory = new Factory(FactoryType.Shared);
-            mTextFormat = factory.CreateTextFormat("Consola", FontWeight.Normal, 
-                FontStyle.Normal, FontStretch.Normal, 10, "en-us");
-            mTextFormat.TextAlignment = TextAlignment.Center;
-            mTextFormat.ParagraphAlignment = ParagraphAlignment.Center;
-            mWindowRenderTarget = new WindowRenderTarget(new SlimDX.Direct2D.Factory(),
-                new RenderTargetProperties
-                {
-                    PixelFormat = new PixelFormat(Format.Unknown, AlphaMode.Premultiplied),
-                    Usage = RenderTargetUsage.None,
-                    HorizontalDpi = 96,
-                    VerticalDpi = 96,
-                    MinimumFeatureLevel = FeatureLevel.Direct3D10,
-                    Type = RenderTargetType.Default
-                },
-                new WindowRenderTargetProperties
-                {
-                    Handle = Window.Handle,
-                    PixelSize = new Size(5, 5)
-                });
-            mBrush = new SolidColorBrush(mWindowRenderTarget, new Color4(1, 1, 1));
         }
 
         protected override void OnFrame()
@@ -164,14 +128,6 @@ namespace Sandbox
 
             mSphereMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * Matrix.RotateX(Gametime));
             mSphereBinding.Draw();
-
-            mWindowRenderTarget.BeginDraw();
-            mWindowRenderTarget.Transform = Matrix3x2.Identity;
-            mWindowRenderTarget.Clear(new Color4(0, 0, 0, 0));
-            var layoutRectangle = new RectangleF(0, 0, 100, 100);
-            mWindowRenderTarget.DrawText(string.Format("{0:0000} fps", 1.0 / Frametime),
-                mTextFormat, layoutRectangle, mBrush);
-            mWindowRenderTarget.EndDraw();
         }
     }
 }
