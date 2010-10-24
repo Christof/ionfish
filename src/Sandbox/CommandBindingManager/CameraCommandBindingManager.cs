@@ -1,11 +1,11 @@
 ﻿using Core.Commands;
+using Graphics;
 using Graphics.Cameras;
 using Input;
-using Math;
 
 namespace Sandbox
 {
-    internal class CameraCommandManager
+    internal class CameraCommandBindingManager : CommandBindingManagerBase
     {
         private float mSpeedFactor;
 
@@ -17,16 +17,15 @@ namespace Sandbox
         private const string DOWN = "down";
         private const string SPEEDFACTOR = "speedfactor";
 
-        private float mFrameTime;
-
-        public CameraCommandManager(ICommandManager commandManager, InputCommandBinder inputCommandBinder, Stand stand)
+        public CameraCommandBindingManager(ICommandManager commandManager, InputCommandBinder inputCommandBinder, Stand stand, Game game)
+            : base(commandManager, inputCommandBinder, game)
         {
-            commandManager.Add(MOVE_FORWARD, () => stand.Position += stand.Direction * mFrameTime * mSpeedFactor);
-            commandManager.Add(MOVE_BACKWARD, () => stand.Position -= stand.Direction* mFrameTime * mSpeedFactor);
-            commandManager.Add(STRAFE_RIGHT, () => stand.Position += stand.Direction.Cross(stand.Up) * mFrameTime * mSpeedFactor);
-            commandManager.Add(STRAFE_LEFT, () => stand.Position -= stand.Direction.Cross(stand.Up) * mFrameTime * mSpeedFactor);
-            commandManager.Add(UP, () => stand.Position += stand.Up * mFrameTime * mSpeedFactor);
-            commandManager.Add(DOWN, () => stand.Position -= stand.Up* mFrameTime * mSpeedFactor);
+            commandManager.Add(MOVE_FORWARD, () => stand.Position += stand.Direction * FrameTime * mSpeedFactor);
+            commandManager.Add(MOVE_BACKWARD, () => stand.Position -= stand.Direction* FrameTime * mSpeedFactor);
+            commandManager.Add(STRAFE_RIGHT, () => stand.Position += stand.Direction.Cross(stand.Up) * FrameTime * mSpeedFactor);
+            commandManager.Add(STRAFE_LEFT, () => stand.Position -= stand.Direction.Cross(stand.Up) * FrameTime * mSpeedFactor);
+            commandManager.Add(UP, () => stand.Position += stand.Up * FrameTime * mSpeedFactor);
+            commandManager.Add(DOWN, () => stand.Position -= stand.Up* FrameTime * mSpeedFactor);
             commandManager.Add(SPEEDFACTOR, () => mSpeedFactor = 20);
 
             inputCommandBinder.Bind(Button.LeftShift, SPEEDFACTOR);
@@ -38,10 +37,9 @@ namespace Sandbox
             inputCommandBinder.Bind(Button.F, DOWN);
         }
 
-        public void Update(float frametime)
+        protected override void  InnerUpdate()
         {
             mSpeedFactor = 1;
-            mFrameTime = frametime;
         }
     }
 }

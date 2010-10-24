@@ -52,8 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AISandboxGame.cs" />
-    <Compile Include="CameraCommandManager.cs" />
-    <Compile Include="OrbitingCameraCommandManager.cs" />
+    <Compile Include="CommandBindingManager\CameraCommandBindingManager.cs" />
+    <Compile Include="CollisionDetectionDemo.cs" />
+    <Compile Include="CommandBindingManager\CommandBindingManagerBase.cs" />
+    <Compile Include="CommandBindingManager\FirstPersonCameraCommandBindingManager.cs" />
+    <Compile Include="CommandBindingManager\OrbitingCameraCommandBindingManager.cs" />
     <Compile Include="WriteDemo.cs" />
     <Compile Include="TextureDemo.cs" />
     <Compile Include="Spheres.cs" />

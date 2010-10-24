@@ -63,6 +63,11 @@ namespace Graphics
             //Application.Exit();
         }
 
+        public void TakeScreenshot()
+        {
+            Window.TakeScreenshot();
+        }
+
         public virtual void Dispose()
         {
             Window.Dispose();

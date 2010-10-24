@@ -25,10 +25,7 @@ namespace Sandbox
         private SeekSteering mSeekSteering;
         private RefugeeSteering mRefugeeSteering;
         private ArrivingSteering mArriveSteering;
-        private CameraCommandManager mCameraCommandManager;
-
-        private const string ESCAPE = "escape";
-        private const string TAKE_SCREENSHOT = "take screenshot";
+        private CameraCommandBindingManager mCameraCommandBindingManager;
 
         protected override void Initialize()
         {
@@ -49,14 +46,10 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(ESCAPE, Exit);
-            commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
             
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            mInputCommandBinder.Bind(Button.Escape, ESCAPE);
-            mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, stand);
+            mCameraCommandBindingManager = new CameraCommandBindingManager(commands, mInputCommandBinder, stand, this);
 
             mSeekSteering = new SeekSteering(mSeekerKinematic, mRefugeeKinematic, 15);
             mArriveSteering = new ArrivingSteering(mArriveKinematic, mRefugeeKinematic, maxAcceleration: 15, slowRadius: 4, satisfactionRadius: 2);
@@ -65,7 +58,7 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
-            mCameraCommandManager.Update(Frametime);
+            mCameraCommandBindingManager.Update(Frametime);
             mKeyboard.Update();
             mInputCommandBinder.Update();
             

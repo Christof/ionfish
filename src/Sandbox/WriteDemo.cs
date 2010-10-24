@@ -16,10 +16,7 @@ namespace Sandbox
         private MeshMaterialBinding mQuadBinding;
         private RenderTargetTexture mTexture;
         private TextRenderTarget mTextRendererTarget;
-        private OrbitingCameraCommandManager mOrbitingCameraCommandManager;
-
-        private const string ESCAPE = "escape";
-        private const string TAKE_SCREENSHOT = "take screenshot";
+        private OrbitingCameraCommandBindingManager mOrbitingCameraCommandBindingManager;
 
         protected override void Initialize()
         {
@@ -36,20 +33,16 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(ESCAPE, Exit);
-            commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
 
             var inputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            inputCommandBinder.Bind(Button.Escape, ESCAPE);
-            inputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            mOrbitingCameraCommandManager = new OrbitingCameraCommandManager(commands, inputCommandBinder, stand);
+            mOrbitingCameraCommandBindingManager = new OrbitingCameraCommandBindingManager(commands, inputCommandBinder, stand, this);
         }
 
         protected override void OnFrame()
         {
             mKeyboard.Update();
-            mOrbitingCameraCommandManager.Update(Frametime);
+            mOrbitingCameraCommandBindingManager.Update(Frametime);
 
             RenderQuad();
         }

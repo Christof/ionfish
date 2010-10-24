@@ -23,16 +23,7 @@ namespace Sandbox
         private Vector3[] mCubePositions;
         private Vector3[] mTrianglePositions;
         private Vector3[] mQuadPositions;
-        private CameraCommandManager mCameraCommandManager;
-
-        private const string ESCAPE = "escape";
-        private const string TAKE_SCREENSHOT = "take screenshot";
-        private const string TURN_LEFT = "turn left";
-        private const string TURN_RIGHT = "turn right";
-        private const string TURN_UP = "turn up";
-        private const string TURN_DOWN = "turn down";
-        private const string ROLL_LEFT = "roll left";
-        private const string ROLL_RIGHT = "roll right";
+        private CameraCommandBindingManager mCameraCommandBindingManager;
 
         protected override void Initialize()
         {
@@ -55,26 +46,10 @@ namespace Sandbox
             mCamera = new Camera(stand, lens);
 
             var commands = new CommandManager();
-            commands.Add(ESCAPE, Exit);
-            commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
-            commands.Add(TURN_LEFT, () => stand.Yaw(-Frametime));
-            commands.Add(TURN_RIGHT, () => stand.Yaw(Frametime));
-            commands.Add(TURN_UP, () => stand.Pitch(-Frametime));
-            commands.Add(TURN_DOWN, () => stand.Pitch(Frametime));
-            commands.Add(ROLL_LEFT, () => stand.Roll(Frametime));
-            commands.Add(ROLL_RIGHT, () => stand.Roll(-Frametime));
 
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            mInputCommandBinder.Bind(Button.Escape, ESCAPE);
-            mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
-            mInputCommandBinder.Bind(Button.J, TURN_LEFT);
-            mInputCommandBinder.Bind(Button.L, TURN_RIGHT);
-            mInputCommandBinder.Bind(Button.I, TURN_UP);
-            mInputCommandBinder.Bind(Button.K, TURN_DOWN);
-            mInputCommandBinder.Bind(Button.U, ROLL_LEFT);
-            mInputCommandBinder.Bind(Button.O, ROLL_RIGHT);
             
-            mCameraCommandManager = new CameraCommandManager(commands, mInputCommandBinder, stand);
+            mCameraCommandBindingManager = new FirstPersonCameraCommandBindingManager(commands, mInputCommandBinder, stand, this);
 
             mVector3Random = new Vector3RandomGenerator(new Vector3(-2, -1, -2), new Vector3(2, 1, 2), 1);
             mCubePositions = new[]
@@ -101,7 +76,7 @@ namespace Sandbox
 
         protected override void OnFrame()
         {
-            mCameraCommandManager.Update(Frametime);
+            mCameraCommandBindingManager.Update(Frametime);
             mKeyboard.Update();
             mInputCommandBinder.Update();
 
