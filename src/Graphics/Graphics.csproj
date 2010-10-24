@@ -59,6 +59,8 @@
     <Compile Include="Cameras\Stand.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Materials\Material.cs" />
+    <Compile Include="Materials\RenderTargetTexture.cs" />
+    <Compile Include="Materials\TextRenderTarget.cs" />
     <Compile Include="Materials\Texture.cs" />
     <Compile Include="MeshMaterialBinding.cs" />
     <Compile Include="Primitives\CubeWithNormals.cs" />

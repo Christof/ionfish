@@ -5,25 +5,25 @@ namespace Graphics.Materials
 {
     public class Texture : IDisposable
     {
-        private readonly Texture2D mTexture;
+        protected readonly Texture2D SlimDXTexture;
         internal ShaderResourceView ShaderResourceView { get; private set; }
 
         public Texture(Device device, Texture2D texture)
         {
-            mTexture = texture;
-            ShaderResourceView = new ShaderResourceView(device, mTexture);
+            SlimDXTexture = texture;
+            ShaderResourceView = new ShaderResourceView(device, SlimDXTexture);
         }
 
         public Texture(Device device, string filename)
         {
-            mTexture = Texture2D.FromFile(device, filename);
-            ShaderResourceView = new ShaderResourceView(device, mTexture);
+            SlimDXTexture = Texture2D.FromFile(device, filename);
+            ShaderResourceView = new ShaderResourceView(device, SlimDXTexture);
         }
 
         public void Dispose()
         {
             ShaderResourceView.Dispose();
-            mTexture.Dispose();
+            SlimDXTexture.Dispose();
         }
     }
 }
