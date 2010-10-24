@@ -5,6 +5,7 @@ using Graphics.Materials;
 using Graphics.Primitives;
 using Input;
 using Math;
+using Math.Collision;
 
 namespace Sandbox
 {
@@ -15,7 +16,10 @@ namespace Sandbox
         private Camera mCamera;
         private Material mSphereMaterial;
         private MeshMaterialBinding mSphereBinding;
-        private CameraCommandBindingManager mCameraCommandBindingManager;
+        private CommandBindingManagerBase mCameraCommandBindingManager;
+
+        private BoundingSphere mSpheraA = new BoundingSphere(Vector3.Zero, 1);
+        private BoundingSphere mSphereB = new BoundingSphere(new Vector3(1, 0, 0), 0.5f);
 
         protected override void Initialize()
         {
@@ -33,8 +37,8 @@ namespace Sandbox
             var commands = new CommandManager();
             
             mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            
-            mCameraCommandBindingManager = new CameraCommandBindingManager(commands, mInputCommandBinder, stand, this);
+
+            mCameraCommandBindingManager = new FirstPersonCameraCommandBindingManager(commands, mInputCommandBinder, stand, this);
 
         }
 
@@ -43,8 +47,13 @@ namespace Sandbox
             mCameraCommandBindingManager.Update(Frametime);
             mKeyboard.Update();
             mInputCommandBinder.Update();
-            
-            mSphereMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * Matrix.RotateX(Gametime));
+
+            var worldMatrixA = Matrix.CreateTranslation(mSpheraA.Center) * Matrix.Scale(mSpheraA.Radius);
+            mSphereMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * worldMatrixA);
+            mSphereBinding.Draw();
+
+            var worldMatrixB = Matrix.CreateTranslation(mSphereB.Center) * Matrix.Scale(mSphereB.Radius);
+            mSphereMaterial.SetWorldViewProjectionMatrix(mCamera.ViewProjectionMatrix * worldMatrixB);
             mSphereBinding.Draw();
         }
     }
