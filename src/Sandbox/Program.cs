@@ -8,26 +8,12 @@ namespace Sandbox
     {
         static void Main()
         {
+#if DEBUG
+            Run();
+#else
             try
             {
-                Game game = new SandboxGame();
-                while (true)
-                {
-                    using (game)
-                    {
-                        game.Run();
-                    }
-
-                    using (var demoSeleciton = new DemoSelection())
-                    {
-                        demoSeleciton.ShowDialog();
-                        if (demoSeleciton.CloseAll)
-                        {
-                            return;
-                        }
-                        game = demoSeleciton.Game;
-                    }
-                }
+                Run();
             }
             catch (Exception exception)
             {
@@ -37,6 +23,29 @@ namespace Sandbox
                     writer.Write(exception.StackTrace);
                 }
                 throw;
+            }
+#endif
+        }
+
+        private static void Run()
+        {
+            Game game = new WriteDemo();
+            while (true)
+            {
+                using (game)
+                {
+                    game.Run();
+                }
+
+                using (var demoSeleciton = new DemoSelection())
+                {
+                    demoSeleciton.ShowDialog();
+                    if (demoSeleciton.CloseAll)
+                    {
+                        return;
+                    }
+                    game = demoSeleciton.Game;
+                }
             }
         }
     }

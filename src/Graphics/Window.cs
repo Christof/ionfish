@@ -3,8 +3,9 @@ using System.Windows.Forms;
 using Core.Helper;
 using SlimDX;
 using SlimDX.Direct3D10;
+using SlimDX.Direct3D10_1;
 using SlimDX.DXGI;
-using Device = SlimDX.Direct3D10.Device;
+using Device = SlimDX.Direct3D10_1.Device1;
 using Resource = SlimDX.Direct3D10.Resource;
 
 namespace Graphics
@@ -37,7 +38,7 @@ namespace Graphics
 
             using (var factory = new Factory())
             {
-                Device = new Device(factory.GetAdapter(0), DriverType.Hardware, DeviceCreationFlags.None);
+                Device = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport, FeatureLevel.Level_10_0);
 
                 mSwapChain = CreateSwapChain(factory);
             }
@@ -63,6 +64,11 @@ namespace Graphics
 
             Device.Rasterizer.SetViewports(viewport);
             Device.OutputMerger.SetTargets(mDepthStencilView, mRenderTarget);
+        }
+
+        public IntPtr Handle
+        {
+            get { return mForm.Handle; }
         }
 
         private void SetRasterizerState()
