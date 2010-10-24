@@ -11,21 +11,15 @@ namespace Sandbox
     public class TextureDemo : Game
     {
         private Keyboard mKeyboard;
-        private InputCommandBinder mInputCommandBinder;
         private Camera mCamera;
         private Material mMaterial;
         private MeshMaterialBinding mQuadBinding;
         private Texture mTexture;
+        private OrbitingCameraCommandManager mOrbitingCameraCommandManager;
 
         private const string ESCAPE = "escape";
         private const string TAKE_SCREENSHOT = "take screenshot";
-        private const string MOVE_FORWARD = "move forward";
-        private const string MOVE_BACKWARD = "move backward";
-        private const string STRAFE_LEFT = "strafe left";
-        private const string STRAFE_RIGHT = "strafe right";
-        private const string UP = "up";
-        private const string DOWN = "down";
-
+        
         protected override void Initialize()
         {
             mMaterial = new Material("texture.fx", Window.Device);
@@ -42,29 +36,17 @@ namespace Sandbox
             commands.Add(ESCAPE, Exit);
             commands.Add(TAKE_SCREENSHOT, Window.TakeScreenshot);
 
-            mInputCommandBinder = new InputCommandBinder(commands, mKeyboard);
-            mInputCommandBinder.Bind(Button.Escape, ESCAPE);
-            mInputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
+            var inputCommandBinder = new InputCommandBinder(commands, mKeyboard);
+            inputCommandBinder.Bind(Button.Escape, ESCAPE);
+            inputCommandBinder.Bind(Button.PrintScreen, TAKE_SCREENSHOT);
 
-            commands.Add(MOVE_BACKWARD, () => stand.Radius += Frametime);
-            commands.Add(MOVE_FORWARD, () => stand.Radius -= Frametime);
-            commands.Add(STRAFE_RIGHT, () => stand.Azimuth -= Frametime);
-            commands.Add(STRAFE_LEFT, () => stand.Azimuth += Frametime);
-            commands.Add(UP, () => stand.Declination += Frametime);
-            commands.Add(DOWN, () => stand.Declination -= Frametime);
-
-            mInputCommandBinder.Bind(Button.W, MOVE_FORWARD);
-            mInputCommandBinder.Bind(Button.S, MOVE_BACKWARD);
-            mInputCommandBinder.Bind(Button.D, STRAFE_RIGHT);
-            mInputCommandBinder.Bind(Button.A, STRAFE_LEFT);
-            mInputCommandBinder.Bind(Button.R, UP);
-            mInputCommandBinder.Bind(Button.F, DOWN);
+            mOrbitingCameraCommandManager = new OrbitingCameraCommandManager(commands, inputCommandBinder, stand);
         }
 
         protected override void OnFrame()
         {
             mKeyboard.Update();
-            mInputCommandBinder.Update();
+            mOrbitingCameraCommandManager.Update(Frametime);
 
             RenderQuad();
         }

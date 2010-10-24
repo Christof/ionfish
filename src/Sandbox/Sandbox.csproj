@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AISandboxGame.cs" />
     <Compile Include="CameraCommandManager.cs" />
+    <Compile Include="OrbitingCameraCommandManager.cs" />
     <Compile Include="WriteDemo.cs" />
     <Compile Include="TextureDemo.cs" />
     <Compile Include="Spheres.cs" />
